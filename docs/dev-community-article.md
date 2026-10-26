@@ -1,68 +1,116 @@
-# The ghost in the repository is just a local model
+# PhantomOS: The Ghost Living Inside Your Code
 
-*Draft for DEV Community. This is a project write-up, not a claim that a contest submission has been accepted.*
+*Draft for the DEV Community submission. Paste the body below into a new post. Suggested tags: `devchallenge`, `hf26challenge`. This draft does not say the entry has been accepted.*
 
-## The problem
+---
 
-Old repositories are awkward to reopen. The README is short, the last person who understood a function is gone, and pasting the tree into a hosted chat means the code leaves the machine. The goal was a terminal tool that stays useful with the model turned off, and stays honest when the model is not there.
+*This is a submission for the [Hacktoberfest Open-Source AI Challenge Week 4: Ghost in the Machine](https://dev.to/challenges/hacktoberfest-week4-2026-10-26)*
 
-## The inspiration
+## What I Built
 
-Hacktoberfest 2026's Week 4 theme has been described as "Ghost in the Machine": something spooky built with open-weight models or open-source AI. PhantomOS takes that literally as a personality, not as a supernatural claim and not as an operating system. The tagline is "The past never leaves the repository."
+PhantomOS is a read-only terminal assistant for opening a repository you have not touched in a long time. The tagline is "The past never leaves the repository."
 
-The assistant is a dry archivist. It can be subtle, normal, cursed, or switched off. The facts do not change when the voice does.
+Week 4 asked for something spooky, or something that keeps a story from disappearing, built around open-source AI. I read that as the feeling of `git log` on a project whose author has moved on. The functions are still there. The reason they look the way they do is not. A hosted chat can guess, and it can also take the tree with it.
 
-## What it does
+PhantomOS splits that job in two.
 
-PhantomOS is a Python 3.11+ CLI.
+GhostShell (`phantomos haunt`) is the haunted session: a dry archivist that can be subtle, normal, cursed, or switched off. DeadCode (`inspect`, `history`, `explain`) is the investigator. It counts files, reads manifests, and prints real commit hashes, dates, and authors. The voice never supplies a hash the repository did not already have.
 
-- `phantomos inspect` counts files, skips dependency and secret paths, and reads READMEs and manifests.
-- `phantomos history` prints real commit hashes, dates, authors, and branch pointers. It does not check anything out.
-- `phantomos explain --file` parses Python with `ast` and, for other languages, uses cautious text patterns. It never imports or runs the file.
-- `phantomos haunt` is a small command loop. `help`, `scan`, `history`, and `exit` are commands. Everything else is a question. `ls` is not executed.
-- `phantomos doctor` and `phantomos model` talk to a local Ollama process. If it is down, they say so. They do not invent an answer and they do not run `ollama pull`.
+It is not an operating system, and it does not pretend to speak to the dead. If Ollama is down, the facts still print. The program says the model is unavailable. It does not invent a ghost paragraph and call it an answer.
 
-Repository text is wrapped as untrusted data. A README that says "ignore previous instructions" is evidence, not a new system prompt. The application still will not open a path the operator did not name, and it will not follow a symlink out of the tree.
+## Demo
 
-## Why local open-weight AI matters
+There is no hosted URL. PhantomOS is a local CLI, and inference stays on the machine. This transcript is from Linux, with color turned off, against the sample lamp archive in the repo. Ollama was not contacted.
 
-Hosted assistants are convenient, and they are also a data path. A private repository should not have to take that path for a first reading. With Ollama, the prompt goes to `127.0.0.1` unless the operator points it somewhere else. The model name is configuration, so it can be replaced. The persona is a prompt plus a few terminal strings, so it can be edited or disabled. The Python is small enough to read.
+```text
+phantomos inspect examples/sample_repository --no-ai --personality normal
+```
 
-Open-weight is not a synonym for open-source. The recommended tag is `qwen2.5-coder:3b` because that is a practical coder model for a machine with about 8 GB of RAM. Upstream, that 3B checkpoint is under the Qwen Research License, not Apache-2.0. The fallback tag is `qwen2.5-coder:1.5b`, whose upstream checkpoint is Apache-2.0. PhantomOS uses the fallback only when it is already installed, and it does not download either tag. Anyone pulling a tag still has to read the license that ships with those weights. PhantomOS does not measure RAM and does not pretend the recommendation will feel smooth on every 8 GB laptop.
+```text
+Local inspection. Not a model response.
+I only read what the repository left behind.
+The repository has awakened. 1 Markdown file was discovered. 1 other eligible
+source file had a different extension.
+Eligible source files       2
+Languages by extension      Markdown 1, Python 1
+project.name = lamp-archive
+```
 
-The useful part is the split: inspection works with no model at all. The model is a commentary layer over evidence the program already collected.
+When two extensions tie, the sentence names the one that sorts first. The table still lists both. The number is a count from the walk, not a line written into the theme.
 
-## A working demo
+```text
+phantomos explain examples/sample_repository --file src/catalog.py --no-ai --personality subtle
+```
+
+```text
+Local inspection. Not a model response.
+Static reading only. The file was not run.
+File: src/catalog.py
+Definitions:
+  - function average_brightness (line 4)
+  - function darkest (line 14)
+```
+
+`average_brightness` walks every reading except the last one, then divides by the full length. The outline shows that. The file is not imported and not executed.
+
+With a local model the same command adds a section labeled as a model response, under the facts. Without one:
 
 ```bash
 python -m venv .venv
 source .venv/bin/activate
-python -m pip install -e .
+python -m pip install -e ".[dev]"
 
 phantomos inspect examples/sample_repository --no-ai
 phantomos explain examples/sample_repository --file src/catalog.py --no-ai
+phantomos history examples/sample_repository --no-ai
 phantomos doctor
 ```
 
-`src/catalog.py` in the sample averages brightness by skipping the last reading and still dividing by the full length. With only `--no-ai`, PhantomOS shows the function and says it did not run the file. With Ollama and a pulled model, `phantomos explain` adds a labeled model response underneath that outline.
+`phantomos doctor` exits 2 when Git or Ollama is missing. It prints the `ollama pull` line and does not run it.
 
-```bash
-ollama pull qwen2.5-coder:3b
-phantomos haunt examples/sample_repository
-```
+A screen recording was not made for this draft. If you want a moving demo before you publish, record the three commands above in a terminal. Twenty seconds is enough.
 
-Inside the session: `scan`, `explain src/catalog.py`, then a question such as "What does average_brightness do?" `exit` leaves. The repository is unchanged.
+## Code
 
-## Limitations and lessons
+{% github gabutersproject/phantomos %}
 
-Bounding the prompt is as important as the persona. A 1.5B model will confabulate if you hand it a whole monorepo and ask for certainty. PhantomOS sends a handful of files and tells the model to say when the evidence runs out. That instruction is not a guarantee.
+[github.com/gabutersproject/phantomos](https://github.com/gabutersproject/phantomos)
 
-Secret handling has false positives and false negatives. Skipping a file that quotes a private-key header is better than uploading it. Missing a novel token format is still possible.
+The application is MIT. The model weights are not. Upstream Qwen2.5-Coder 3B is under the Qwen Research License. The 1.5B checkpoint is Apache-2.0. An Ollama tag can differ from those snapshots, so the model card on the tag you pull is the one that counts.
 
-The horror voice was the easy part. The hard part was refusing to let it speak when the model was down. A canned ghost paragraph would have looked like a feature and would have been a lie. The degraded path prints repository facts and an explicit "AI unavailable" panel.
+## How I Built It
 
-This draft does not confirm Hacktoberfest eligibility, dates, or submission rules. Check the current official requirements before treating it as an entry.
+The open piece is local inference through [Ollama](https://ollama.com/). The recommended tag is `qwen2.5-coder:3b`, aimed at a laptop with about 8 GB of RAM and no GPU. The fallback is `qwen2.5-coder:1.5b`, and only if that tag is already installed. PhantomOS does not download weights, does not send an API key, and does not call a commercial model API. The default host is `http://127.0.0.1:11434`. Point it somewhere else and the tool warns you.
 
-## License
+The program is Python 3.11 or newer. Typer parses the commands. Rich draws the terminal. GitPython reads commits and asks `check-ignore`. Pydantic checks the config before it is saved. Nothing in that list is a CUDA package.
 
-The application is MIT. Model weights are not covered by that license.
+The path that matters:
+
+1. The scanner walks the directory you named. It does not follow a symlink or a Windows junction out of that directory. It skips `.git`, virtualenvs, `node_modules`, build outputs, and obvious secret names such as `.env` and private keys. Secret detection is a heuristic. It will miss a novel token format.
+2. Python files get an `ast` outline. Other languages get a cautious text pattern, labeled as approximate. Nothing is imported.
+3. A small slice of that evidence is wrapped in `<untrusted_repository_data>` and sent to Ollama, one request at a time, with a cap on generated tokens. Repository text cannot close the wrapper by repeating the delimiter. A `tool_calls` reply is rejected. The model has no shell.
+4. If the request times out, the JSON is garbage, or the service refuses the connection, you get the error and the facts you already had. There is no canned completion.
+
+`phantomos haunt` is not a system shell. `help`, `scan`, `history`, `explain`, and `exit` are commands. Any other line is a question. `ls` is not executed.
+
+A coding agent in Cursor did a large part of the implementation, with the read-only rules written down first. The tests use a fake Ollama client. They do not need a running model. On the machine where the suite last ran, Ruff was clean and pytest reported 71 passed.
+
+## Why Does Open Innovation Matter?
+
+A forgotten repository is often a private one. The first reading should not require uploading it to a service that can change its price, its retention policy, or its mind.
+
+A closed API could have written a spookier paragraph. It could not have done three things this tool needed:
+
+- Run the inspection when the network, the key, or the vendor is gone. `inspect` and `history --no-ai` never call a model.
+- Swap the model by changing one config value. The scanner does not know the tokenizer, the lab, or the context window. A 3B tag and a 1.5B tag are both just local names. The 3B weights are research-licensed, which is a reason to say so in the README instead of hiding behind the word "open."
+- Show the policy as ordinary Python. The refusal to follow `..`, the refusal to run `core.fsmonitor` from a hostile `.git/config`, and the refusal to treat a README as a new system prompt are in the repository. You can read the function. You do not have to trust a paragraph in a privacy policy.
+
+Local inference is not a magic circle. A hostile repository can still try to confuse the model. A non-loopback host receives whatever you choose to send. Open weights are not the same thing as an OSI license. What the open path bought here is a first reading that stays on the laptop, and a failure mode that admits the model is missing.
+
+## The Spirit of It
+
+The sample in the repo is a lamp catalog from a workshop that closed. Brightness was stored as plain integers. Nobody wrote down the unit. `average_brightness` drops the last reading and still divides by the full length.
+
+That is the ghost I wanted. Not a jump scare. A small mistake that outlived the person who would have explained it. PhantomOS can point at line 4. It cannot tell you whether the off-by-one was a rush or a belief about how the mean should work. The commit message is the only intent on record, and even that is just the message.
+
+When the model is silent, the line on screen is still a count from disk: one Markdown file, one Python file, nothing awakened that was not there. The past stays in the repository. The tool does not get to invent the rest.
