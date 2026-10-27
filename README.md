@@ -195,7 +195,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.
 
 This repository used to contain a read-only terminal inspector for Git repositories (`inspect`, `history`, `explain`, `haunt`). That program is not in this tree. Git history still has it. Laboratory settings do not migrate the old `config.json`.
 
-[docs/dev-community-article.md](docs/dev-community-article.md) describes that retired inspector. [CHANGELOG.md](CHANGELOG.md) lists what 0.2.0 removed. The mark at `docs/assets/mark.svg` and `src/ai_alchemist/web/mark.svg` is the same drawing.
+[docs/dev-community-article.md](docs/dev-community-article.md) is the Week 4 submission outline. [CHANGELOG.md](CHANGELOG.md) lists what 0.2.0 removed. The mark at `docs/assets/mark.svg` and `src/ai_alchemist/web/mark.svg` is the same drawing.
 
 ## Why the model stays swappable
 
