@@ -90,7 +90,7 @@ def git_binary_status() -> tuple[bool, str]:
     if not location:
         return (
             False,
-            "git was not found on PATH. Install Git to use history. PhantomOS will not install it.",
+            "git was not found on PATH. Install Git to use history. AI Alchemist will not install it.",
         )
     try:
         ensure_git_readonly_env()
@@ -257,7 +257,7 @@ def choose_inference_model(
         notice = (
             f"'{config.model}' is not installed. This request will use the fallback "
             f"'{fallback}', which is already installed locally. "
-            "PhantomOS did not download a model."
+            "AI Alchemist did not download a model."
         )
         return fallback, notice
     return None, status.detail
@@ -541,7 +541,7 @@ def run_explain(
 def run_doctor(console: Console) -> int:
     """Report environment checks and actionable next steps. Installs nothing."""
     report = collect_environment()
-    table = Table(title="PhantomOS doctor", header_style="phantom.accent")
+    table = Table(title="AI Alchemist doctor", header_style="phantom.accent")
     table.add_column("Check")
     table.add_column("Result")
     table.add_column("Detail")
@@ -581,7 +581,7 @@ def run_doctor(console: Console) -> int:
     elif report.model_present is False:
         model_result = "FAIL"
         model_name = report.config.model if report.config else EXAMPLE_MODEL
-        model_detail = f"Not installed. PhantomOS will not download it. Run: ollama pull {model_name}"
+        model_detail = f"Not installed. AI Alchemist will not download it. Run: ollama pull {model_name}"
     else:
         model_result = "FAIL"
         model_detail = "Model availability was not confirmed."
@@ -612,7 +612,7 @@ def run_doctor(console: Console) -> int:
 def _doctor_advice(console: Console, report: EnvironmentReport) -> None:
     advice: list[str] = []
     if not report.python_ok:
-        advice.append("Install Python 3.11 or newer. PhantomOS will not install it for you.")
+        advice.append("Install Python 3.11 or newer. AI Alchemist will not install it for you.")
     if not report.git_ok:
         advice.append(
             "Install Git from https://git-scm.com/downloads if you need history. "
@@ -628,7 +628,7 @@ def _doctor_advice(console: Console, report: EnvironmentReport) -> None:
         advice.append(
             "AI features need a local Ollama service. Install it from https://ollama.com/download "
             "if you do not already have it, then start it with `ollama serve` when it is not running. "
-            "PhantomOS does not install Ollama or download models."
+            "AI Alchemist does not install Ollama or download models."
         )
     if report.config is not None and report.model_present is not True:
         advice.append(
@@ -640,7 +640,7 @@ def _doctor_advice(console: Console, report: EnvironmentReport) -> None:
                 advice.append(
                     f"The fallback '{report.config.fallback_model}' is already installed. "
                     "A later request can use it without changing the configured model. "
-                    "PhantomOS will not download either tag."
+                    "AI Alchemist will not download either tag."
                 )
             else:
                 advice.append(
@@ -679,7 +679,7 @@ def run_model(console: Console, config: PhantomConfig | None = None) -> int:
         console.print(Text("No local model list is available."))
     console.print(
         Text(
-            "PhantomOS does not assume a context length, GPU, or memory size for this model. "
+            "AI Alchemist does not assume a context length, GPU, or memory size for this model. "
             "If generation fails, the error from Ollama is shown and no answer is invented. "
             "Performance depends on your hardware and the model you choose."
         )
@@ -698,7 +698,7 @@ def run_model(console: Console, config: PhantomConfig | None = None) -> int:
             "The design target is a machine with about 8 GB of RAM and no GPU. "
             "That is not a promise the model will run smoothly. "
             "The operating system, quantization, context length, and other running programs all change the result. "
-            "If generation fails, including an out-of-memory error, PhantomOS shows that error "
+            "If generation fails, including an out-of-memory error, AI Alchemist shows that error "
             "and does not invent an answer."
         )
     )
@@ -713,15 +713,16 @@ def run_model(console: Console, config: PhantomConfig | None = None) -> int:
         )
     )
     console.print(Text("Select another local model with:"))
-    console.print(Text("  phantomos config set model NAME"))
-    console.print(Text("  phantomos config set fallback_model NAME"))
-    console.print(Text("  phantomos config set max_output_tokens 512"))
+    console.print(Text("  ai-alchemist config set model NAME"))
+    console.print(Text("  ai-alchemist config set fallback_model NAME"))
+    console.print(Text("  ai-alchemist config set max_output_tokens 512"))
     console.print(Text("or set PHANTOMOS_MODEL for one process."))
+    console.print(Text("The phantomos command runs this same program."))
     console.print(Text("To download a model yourself, run one of:"))
     console.print(Text(f"  ollama pull {config.model}"))
     if config.fallback_model != config.model:
         console.print(Text(f"  ollama pull {config.fallback_model}"))
-    console.print(Text("PhantomOS will not run that command."))
+    console.print(Text("AI Alchemist will not run that command."))
     if report.ollama_reachable is True and report.model_present is True:
         return 0
     return 2
