@@ -1,6 +1,6 @@
 # Contributing to AI Alchemist
 
-AI Alchemist is a read-only local assistant. Patches that keep that boundary are welcome.
+AI Alchemist is a local laboratory for open-weight models. Patches that keep provider calls isolated, and that refuse to invent replies, are welcome.
 
 ## Setup
 
@@ -20,39 +20,26 @@ py -3.11 -m venv .venv
 python -m pip install -e ".[dev]"
 ```
 
-You do not need Ollama to run the tests. A live model is only for your own manual check of `ai-alchemist explain` without `--no-ai`.
+You do not need Ollama to run the tests. A live model is only for your own check in the browser.
 
 ## Tests and lint
-
-From the activated environment:
 
 ```bash
 python -m pytest
 python -m ruff check src tests
 ```
 
-Tests build temporary Git repositories and a fake Ollama client. Do not point them at a personal checkout or put real credentials in fixtures.
-
-On this project's Linux development machine, `python3 -m venv` was unavailable, so the suite was run with a `--prefix` install instead. That layout can make `python -m ruff` miss the `ruff` binary. Inside a normal virtual environment the two commands above are the ones to use.
+Tests inject a fake provider or an `httpx.MockTransport`. Do not point them at a personal Ollama server or put real tokens in fixtures.
 
 ## Conventions
 
 - Python 3.11 or newer. Type hints on public functions.
-- New behavior needs a pytest, including the failure path.
-- Repository text stays inside the untrusted prompt block.
-- Do not import `subprocess` or call `os.system` from `src/ai_alchemist`. Git access goes through GitPython, with the read-only overrides in `repository/git_safety.py`.
-- Do not add a shell tool, a write mode, telemetry, or an automatic model download.
-- Facts printed in the terminal come from the filesystem, Git, or a real model response.
-- Personality strings must not contain hashes, dates, authors, or counts that the caller did not supply.
-- Keep changes small. Match the module that already owns the behavior.
-
-## Suggested first tasks
-
-These are not existing issue numbers.
-
-- Add one file extension to `language_name` and assert the scan count.
-- Teach `simple_ignored` one more pattern, with a unit test, and document what it still does not parse.
-- Add a credential filename to the secret list and prove the file body never reaches a prompt.
+- New provider behavior belongs in `src/ai_alchemist/providers/`.
+- Do not import `subprocess` or call `os.system`.
+- Do not add a tool channel, telemetry, or an automatic model download.
+- Do not return saved tokens to the browser or write them into experiment rows.
+- A provider failure stays a failure. Do not add a fallback paragraph that pretends to be the model.
+- Cover the failure path with pytest.
 
 ## Conduct
 
