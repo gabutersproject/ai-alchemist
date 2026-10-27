@@ -1,5 +1,0 @@
-[project]
-name = "lamp-archive"
-version = "0.0.1"
-description = "A leftover catalog of lamp brightness readings."
-requires-python = ">=3.11"
