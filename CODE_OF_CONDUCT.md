@@ -7,7 +7,7 @@ AI Alchemist is a small open-source developer tool. People who use it, read it, 
 - Assume good faith in review comments.
 - Critique the change, not the person.
 - Keep discussion on the code, the documentation, and the security boundaries.
-- Accept a "no" on patches that would execute repository content, write into a repository under inspection, or phone home.
+- Accept a "no" on patches that would execute prompts as shell commands, hide a remote provider behind a local label, or phone home with experiment history.
 
 ## Unacceptable behavior
 

@@ -1,21 +1,30 @@
 # Changelog
 
-## Unreleased
+## 0.2.0
 
-The public name, the Python package, the console script, the environment variables, and the data directory are all AI Alchemist. Inspection, history, explain, the Ollama client, and the read-only rules behave as they did before this rename. The version number is still 0.1.0.
+AI Alchemist is now a local laboratory for open-weight models. The previous program in this repository was a read-only terminal inspector for Git repositories. That inspector is no longer in the tree. Git history still has it.
 
-### Names
+### Laboratory
 
-| What | Name |
-| --- | --- |
-| Command | `ai-alchemist` |
-| Python package | `ai_alchemist` (`src/ai_alchemist`) |
-| Module | `python -m ai_alchemist` |
-| Settings class | `AlchemistConfig` |
-| Error base class | `AIAlchemistError` |
-| Environment variables | `AI_ALCHEMIST_*` |
-| Data directory | `ai-alchemist` |
+- Playground with streaming replies, stop, new conversation, and copy.
+- Ollama adapter for `/api/tags` and `/api/chat`. Loopback hosts are labeled local. Other hosts are labeled remote.
+- Model list built only from the provider payload.
+- Side-by-side comparison of two model names, with independent errors and no ranking.
+- Optional SQLite experiment history, off until enabled, with delete controls.
+- Ghost mode and the emerald and gold laboratory interface.
+- Settings for host, optional bearer token, models, output cap, and history.
 
-The old `phantomos` command, `PHANTOMOS_*` variables, and `phantomos` data directory are not read. Copy an existing `config.json` into the new data directory if you want to keep those settings.
+### Kept from the earlier tree
 
-Command names and flags are unchanged, including `haunt`.
+- MIT license.
+- The mark in `docs/assets/mark.svg`, also served from the web interface.
+- `docs/dev-community-article.md`, which describes the retired inspector.
+- The rule that a provider failure is not replaced with an invented answer, that redirects are not followed, and that tool calls are not executed. Those rules were reimplemented for the laboratory.
+
+### Removed
+
+- The `inspect`, `history`, `explain`, and `haunt` commands.
+- Git repository scanning.
+- The sample lamp repository under `examples/`.
+
+An older inspector config file is not migrated. Laboratory settings use `lab-config.json`.

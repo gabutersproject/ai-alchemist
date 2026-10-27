@@ -1,6 +1,8 @@
-# AI Alchemist: The Ghost Living Inside Your Code
+# Historical draft: repository inspector
 
-*Draft for the Week 4 submission. The command is `ai-alchemist`. Suggested tags if you publish it: `devchallenge`, `hf26challenge`. This draft does not say the entry has been accepted.*
+This document describes the retired read-only repository inspector that used to live in this repository. The current product is the AI Alchemist laboratory. See the README. The command examples below are not the current interface.
+
+*Draft for the Week 4 submission. Suggested tags if you publish it: `devchallenge`, `hf26challenge`. This draft does not say the entry has been accepted.*
 
 ---
 

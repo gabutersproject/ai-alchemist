@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title desc">
+  <title id="title">AI Alchemist</title>
+  <desc id="desc">A circle, an upward triangle, and three nodes.</desc>
+  <circle cx="32" cy="32" r="22" fill="none" stroke="#10B981" stroke-width="2"/>
+  <path d="M32 18 L44 40 H20 Z" fill="none" stroke="#D4AF37" stroke-width="2" stroke-linejoin="round"/>
+  <circle cx="32" cy="14" r="2" fill="#10B981"/>
+  <circle cx="50" cy="40" r="2" fill="#10B981"/>
+  <circle cx="14" cy="40" r="2" fill="#10B981"/>
+</svg>

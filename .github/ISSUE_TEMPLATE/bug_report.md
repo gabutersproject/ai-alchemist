@@ -8,11 +8,11 @@ assignees: ""
 
 ## What happened
 
-## Command
+## Steps
 
-```bash
-ai-alchemist 
-```
+1. Open the page:
+2. Model and provider:
+3. What you sent:
 
 ## What you expected
 
@@ -21,5 +21,6 @@ ai-alchemist
 - Operating system:
 - Python version:
 - `ai-alchemist --version`:
+- Ollama host was loopback or remote:
 
-Do not paste `.env` files, private keys, or repository source you cannot share.
+Do not paste tokens, `.env` files, or private prompts you cannot share.

@@ -7,5 +7,5 @@
 
 ## Boundaries
 
-- [ ] The change does not execute repository content, write into a repository under inspection, or download a model.
-- [ ] Facts in the terminal still come from the filesystem, Git, or a real model response.
+- [ ] The change does not execute prompts as shell commands, download a model, or invent a reply when the provider fails.
+- [ ] Provider tokens are not returned to the browser, logged, or written into experiment history.

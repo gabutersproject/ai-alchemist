@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <title>AI Alchemist</title>
+    <link rel="icon" href="/static/mark.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <div class="shell">
+      <aside class="rail">
+        <div class="brand">
+          <img src="/static/mark.svg" width="42" height="42" alt="" />
+          <div>
+            <p class="brand-name">AI Alchemist</p>
+            <p class="brand-line">Turn Open Models Into Intelligent Creations.</p>
+          </div>
+        </div>
+        <nav aria-label="Primary">
+          <a href="#playground" data-route="playground">Playground</a>
+          <a href="#compare" data-route="compare">Compare</a>
+          <a href="#models" data-route="models">Models</a>
+          <a href="#history" data-route="history">History</a>
+          <a href="#settings" data-route="settings">Settings</a>
+        </nav>
+        <div class="rail-foot">
+          <p id="provider-chip" class="chip">Checking provider…</p>
+          <button type="button" id="ghost-toggle" aria-pressed="false">Ghost mode</button>
+          <p id="version" class="version"></p>
+        </div>
+      </aside>
+      <div class="workspace">
+        <header class="top">
+          <div>
+            <p class="eyebrow" id="view-kicker">Laboratory</p>
+            <h1 id="view-title">Playground</h1>
+          </div>
+          <p id="active-model" class="active-model">No model selected</p>
+        </header>
+        <main id="main" tabindex="-1"></main>
+      </div>
+    </div>
+    <script src="/static/app.js"></script>
+  </body>
+</html>
