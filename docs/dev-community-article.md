@@ -20,6 +20,10 @@ The names in the program are the command and the package. `haunt`, `inspect`, `h
 
 ## Demo
 
+![AI Alchemist playground while it is running](assets/demo-playground.png)
+
+![AI Alchemist model list while it is running](assets/demo-models.png)
+
 There is no hosted URL. Inference, when you ask for it, goes to the configured Ollama host. The default is `http://127.0.0.1:11434`. The transcript below is the `--no-ai` path, which does not contact Ollama. It was produced on Linux from this repository with `NO_COLOR=1` and with stdout not attached to a terminal, so Rich used a width of 100. Absolute paths in a real run are the resolved paths on that machine. Column padding depends on the terminal. The sentences and the counts do not.
 
 ```bash
