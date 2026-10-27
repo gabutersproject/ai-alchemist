@@ -42,8 +42,8 @@ def logo_art() -> str:
     width = 54
     rows = [
         "",
-        "        \u25cb",
-        "       \u2571\u25b3\u2572",
+        "        ○",
+        "       ╱△╲",
         "",
         f"   {APP_NAME.upper()}",
         "   TRANSFORM IDEAS INTO INTELLIGENCE.",
@@ -52,9 +52,9 @@ def logo_art() -> str:
         f'   "{TAGLINE}"',
         "",
     ]
-    top = "\u2554" + ("\u2550" * width) + "\u2557"
-    bottom = "\u255a" + ("\u2550" * width) + "\u255d"
-    body = ["\u2551" + row.ljust(width) + "\u2551" for row in rows]
+    top = "╔" + ("═" * width) + "╗"
+    bottom = "╚" + ("═" * width) + "╝"
+    body = ["║" + row.ljust(width) + "║" for row in rows]
     return "\n".join([top, *body, bottom])
 
 
@@ -136,7 +136,7 @@ def render_excerpt(console: Console, relative: str, text: str, *, max_lines: int
     shown = rows[:max_lines]
     body = "\n".join(shown)
     if len(rows) > max_lines:
-        body += f"\n\u2026 [{len(rows) - max_lines} more lines not shown in the terminal]"
+        body += f"\n… [{len(rows) - max_lines} more lines not shown in the terminal]"
     console.print(
         Panel(
             Text(body),
