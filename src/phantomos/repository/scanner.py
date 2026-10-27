@@ -163,7 +163,7 @@ def scan_repository(path: Path, config: PhantomConfig) -> ScanReport:
     if any(part.lower() == ".git" for part in selected.parts):
         report.warnings.append(
             "The selected path is inside a .git directory. "
-            "PhantomOS did not read Git internals."
+            "AI Alchemist did not read Git internals."
         )
         report.tree = selected.name + "/"
         return report
