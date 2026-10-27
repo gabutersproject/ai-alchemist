@@ -18,7 +18,7 @@ AI Alchemist is now a local laboratory for open-weight models. The previous prog
 
 - MIT license.
 - The mark in `docs/assets/mark.svg`, also served from the web interface.
-- `docs/dev-community-article.md`, which describes the retired inspector.
+- `docs/dev-community-article.md`, the Week 4 write-up of the laboratory.
 - The rule that a provider failure is not replaced with an invented answer, that redirects are not followed, and that tool calls are not executed. Those rules were reimplemented for the laboratory.
 
 ### Removed
