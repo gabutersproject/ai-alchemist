@@ -1,7 +1,7 @@
 """Configuration for local inference and repository limits.
 
 The example model is a configuration value, not a promise that it is installed
-or that it fits the current machine. PhantomOS never downloads weights.
+or that it fits the current machine. AI Alchemist never downloads weights.
 """
 
 import json
