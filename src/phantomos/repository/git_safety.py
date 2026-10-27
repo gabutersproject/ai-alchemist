@@ -1,7 +1,7 @@
 """Keep Git from honoring repository config that executes programs.
 
 Git runs ``core.fsmonitor`` during ordinary read commands such as ``rev-list``.
-A repository can point that setting at a program. PhantomOS overrides the
+A repository can point that setting at a program. AI Alchemist overrides the
     settings below for its own process so repository content cannot choose a
     command. This does not modify the repository's config file. Git is still
     invoked through GitPython.

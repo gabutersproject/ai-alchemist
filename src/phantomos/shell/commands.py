@@ -31,10 +31,10 @@ Commands
   repo PATH                 Select a repository
   clear                     Clear this conversation
   memory                    Show whether conversations are stored
-  exit                      Leave PhantomOS
+  exit                      Leave AI Alchemist
 
 Any other line is a question for the local model.
-PhantomOS does not run it as an operating-system command.
+AI Alchemist does not run it as an operating-system command.
 """.strip()
 
 

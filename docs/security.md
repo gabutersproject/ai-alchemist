@@ -1,16 +1,16 @@
 # Security model
 
-PhantomOS is read-only by design. The controls below are in application code. Prompt text is an extra constraint on the model, not the boundary.
+AI Alchemist is read-only by design. The controls below are in application code. Prompt text is an extra constraint on the model, not the boundary.
 
 ## Enforced behavior
 
 - No arbitrary shell execution. The package does not import `subprocess` or call `os.system`.
 - No execution of repository source, scripts, or instructions found in files.
 - No Git commands that change HEAD, the index, remotes, or history.
-- Repository Git config cannot choose a program. PhantomOS overrides `core.fsmonitor`, `core.hooksPath`, `core.sshCommand`, `core.pager`, `diff.external`, `credential.helper`, and `protocol.ext.allow` for its own Git subprocesses. The repository config file is not rewritten.
+- Repository Git config cannot choose a program. AI Alchemist overrides `core.fsmonitor`, `core.hooksPath`, `core.sshCommand`, `core.pager`, `diff.external`, `credential.helper`, and `protocol.ext.allow` for its own Git subprocesses. The repository config file is not rewritten.
 - No writes to the repository under inspection.
 - No automatic dependency installation.
-- No automatic model download. `phantomos model` prints `ollama pull <name>` and does not run it.
+- No automatic model download. `ai-alchemist model` (and the `phantomos model` alias) prints `ollama pull <name>` and does not run it.
 - No tool list is sent to Ollama. A `tool_calls` payload is rejected and not executed.
 - No telemetry or third-party model API. The HTTP client talks only to the configured Ollama URL.
 - Redirects from that URL are refused, so a local service cannot bounce the prompt elsewhere without the operator noticing a failure.
@@ -25,10 +25,10 @@ PhantomOS is read-only by design. The controls below are in application code. Pr
 
 ## What this does not guarantee
 
-- A language model can still ignore its instructions and invent a plausible sentence. PhantomOS labels that text as a model response and keeps Git hashes, file lists, and counts in a separate "not a model response" section. Do not treat the model section as an audit.
-- Prompt injection in a README can still influence wording. It cannot make PhantomOS open a new file, run a command, or reveal the system prompt from application logic. The system prompt is not included in repository context.
+- A language model can still ignore its instructions and invent a plausible sentence. AI Alchemist labels that text as a model response and keeps Git hashes, file lists, and counts in a separate "not a model response" section. Do not treat the model section as an audit.
+- Prompt injection in a README can still influence wording. It cannot make AI Alchemist open a new file, run a command, or reveal the system prompt from application logic. The system prompt is not included in repository context.
 - Local inference is not a complete security boundary. A hostile model, a compromised Ollama process, or an `ollama_host` pointed at another machine can expose whatever you choose to send. The default host is loopback, and a non-loopback host produces a warning.
-- Hard links are ordinary files if the path stays inside the root. PhantomOS does not try to discover other names for the same inode.
+- Hard links are ordinary files if the path stays inside the root. AI Alchemist does not try to discover other names for the same inode.
 - Junction handling was tested by simulating `os.path.isjunction` on Linux. It was not executed on Windows.
 - There is a time-of-check/time-of-use gap between the path check and the read.
 - The conversation database is plaintext SQLite. Do not enable persistence on a shared machine if that matters.
@@ -38,7 +38,7 @@ PhantomOS is read-only by design. The controls below are in application code. Pr
 
 ## Operator checks
 
-`phantomos doctor` reports Python, Git, the config file, the data directory, the terminal, Ollama, and the configured model. It does not install or download anything. Exit code `0` means those checks passed. Exit code `2` means inspection can still run but Git or the local model is unavailable. Exit code `1` means Python, configuration, or the data directory failed.
+`ai-alchemist doctor` reports Python, Git, the config file, the data directory, the terminal, Ollama, and the configured model. `phantomos doctor` is the same check. It does not install or download anything. Exit code `0` means those checks passed. Exit code `2` means inspection can still run but Git or the local model is unavailable. Exit code `1` means Python, configuration, or the data directory failed.
 
 ## Out of scope
 

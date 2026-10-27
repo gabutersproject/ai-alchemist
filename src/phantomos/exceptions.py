@@ -55,4 +55,4 @@ class AIUnavailableError(PhantomOSError):
 
 
 class AIResponseError(PhantomOSError):
-    """The model service responded in a way PhantomOS will not treat as an answer."""
+    """The model service responded in a way AI Alchemist will not treat as an answer."""

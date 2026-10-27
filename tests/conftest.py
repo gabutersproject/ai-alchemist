@@ -1,4 +1,4 @@
-"""Keep tests away from the developer's real PhantomOS configuration."""
+"""Keep tests away from the developer's real AI Alchemist configuration."""
 
 import pytest
 
