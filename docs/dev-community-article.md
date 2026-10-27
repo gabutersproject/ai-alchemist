@@ -4,6 +4,12 @@
 
 ## Demo
 
+The laboratory running in the browser at `http://127.0.0.1:8000`.
+
+![AI Alchemist playground while it is running](assets/demo-playground.png)
+
+![AI Alchemist model list while it is running](assets/demo-models.png)
+
 ## Code
 
 ## How I Built It

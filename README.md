@@ -4,6 +4,8 @@
 
 **Turn Open Models Into Intelligent Creations.**
 
+![AI Alchemist playground while it is running](docs/assets/demo-playground.png)
+
 AI Alchemist is a local laboratory for open-weight models. You choose a model, send a prompt, and can compare two models on that same prompt. The page talks to [Ollama](https://ollama.com/) through a small server on your machine. It does not ship a model, and it does not write a reply when Ollama is down.
 
 Version 0.2.0. The command is `ai-alchemist`. The Python package is `ai_alchemist`.
