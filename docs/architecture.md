@@ -1,6 +1,6 @@
 # Architecture
 
-PhantomOS is a read-only terminal assistant. It is not an operating system. GhostShell is the interactive session (`phantomos haunt`). DeadCode is the inspection surface (`inspect`, `history`, `explain`). Both use the same security boundary and the same optional Ollama provider.
+AI Alchemist is a read-only terminal assistant. It is not an operating system. `phantomos haunt` and `ai-alchemist haunt` open the same interactive session. `inspect`, `history`, and `explain` are the inspection commands. Both surfaces use the same security boundary and the same optional Ollama provider. The Python package directory remains `src/phantomos`.
 
 ```
 Typer CLI
@@ -38,7 +38,7 @@ Trusted inputs are the operator's command-line flags, interactive commands (`hel
 
 Repository files, README text, comments, commit messages, manifest fields, and static outlines are untrusted evidence. They are wrapped in `<untrusted_repository_data>` after any copy of that delimiter has been stripped from the evidence. The system prompt is built only from static strings in `prompts.py`.
 
-Natural-language lines in `phantomos haunt` are questions. They are never passed to a system shell.
+Natural-language lines in `ai-alchemist haunt` are questions. They are never passed to a system shell. `phantomos haunt` is the same session.
 
 ## Inference
 
@@ -48,7 +48,7 @@ File inspection, counts, and Git metadata do not require Ollama.
 
 ## Persistence
 
-Conversation persistence is off by default. When enabled, SQLite at the application data directory stores role, text, time, and repository path. Turns that match credential markers stay in process memory only. `phantomos memory clear` deletes stored rows even if persistence is currently off.
+Conversation persistence is off by default. When enabled, SQLite at the application data directory stores role, text, time, and repository path. Turns that match credential markers stay in process memory only. `ai-alchemist memory clear` deletes stored rows even if persistence is currently off. The data directory name is still `phantomos`.
 
 ## Read-only boundary
 

@@ -1,6 +1,6 @@
-# Contributing to PhantomOS
+# Contributing to AI Alchemist
 
-PhantomOS is a read-only local assistant. Patches that keep that boundary are welcome.
+AI Alchemist is a read-only local assistant. Patches that keep that boundary are welcome.
 
 ## Setup
 
@@ -20,7 +20,7 @@ py -3.11 -m venv .venv
 python -m pip install -e ".[dev]"
 ```
 
-You do not need Ollama to run the tests. A live model is only for your own manual check of `phantomos explain` without `--no-ai`.
+You do not need Ollama to run the tests. A live model is only for your own manual check of `ai-alchemist explain` without `--no-ai`.
 
 ## Tests and lint
 
