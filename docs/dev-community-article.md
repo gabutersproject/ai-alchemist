@@ -1,6 +1,6 @@
 # PhantomOS: The Ghost Living Inside Your Code
 
-*Draft for the DEV Community submission. Paste the body below into a new post. Suggested tags: `devchallenge`, `hf26challenge`. This draft does not say the entry has been accepted.*
+*Historical draft. The public name is now AI Alchemist. This post was written for the Week 4 submission while the project was still presented as PhantomOS. The behavior below is the same program: `phantomos` and `ai-alchemist` call one entry point. Suggested tags if you still publish it: `devchallenge`, `hf26challenge`. This draft does not say the entry has been accepted.*
 
 ---
 
