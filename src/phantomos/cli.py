@@ -1,11 +1,11 @@
-"""PhantomOS command-line interface."""
+"""AI Alchemist command-line interface."""
 
 from pathlib import Path
 from typing import Annotated
 
 import typer
 
-from phantomos import __version__
+from phantomos import APP_NAME, TAGLINE, __version__
 from phantomos.config import (
     PhantomConfig,
     config_path,
@@ -29,10 +29,10 @@ from phantomos.workflows import (
 )
 
 app = typer.Typer(
-    name="phantomos",
+    name="ai-alchemist",
     no_args_is_help=True,
     rich_markup_mode=None,
-    help="PhantomOS — the past never leaves the repository. Read-only local assistant.",
+    help=f"{APP_NAME} — {TAGLINE} Read-only local assistant.",
 )
 config_app = typer.Typer(
     no_args_is_help=True,
@@ -61,7 +61,7 @@ def main(
         typer.Option("--version", callback=_version, is_eager=True, help="Show the version and exit."),
     ] = False,
 ) -> None:
-    """PhantomOS — the past never leaves the repository."""
+    """AI Alchemist — Transform Ideas Into Intelligence."""
     configure_logging()
 
 
@@ -94,7 +94,7 @@ def haunt(
         typer.Option("--personality", help="subtle, normal, cursed, or off."),
     ] = None,
 ) -> None:
-    """Open the interactive PhantomOS shell. It does not replace your system shell."""
+    """Open the interactive AI Alchemist shell. It does not replace your system shell."""
 
     def action(console):
         return run_haunt(
@@ -206,7 +206,7 @@ def config_show() -> None:
     render_key_values(console, f"Configuration ({config_path()})", rows)
     console.print(
         "Environment variables override the file when they are set. "
-        "PhantomOS does not send this configuration to a remote analytics service."
+        "AI Alchemist does not send this configuration to a remote analytics service."
     )
 
 
@@ -254,7 +254,7 @@ def memory_path() -> None:
     console.print(f"Database path: {path}")
     console.print(
         "The database is local SQLite and is created only when persistence is enabled. "
-        "PhantomOS remains usable with persistence off."
+        "AI Alchemist remains usable with persistence off."
     )
 
 
