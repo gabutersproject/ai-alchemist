@@ -14,5 +14,5 @@ htmlcov/
 *.sqlite-journal
 *.db
 .env
-.phantomos-write-probe
+.ai-alchemist-write-probe
 *.json.tmp

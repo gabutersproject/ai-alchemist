@@ -7,10 +7,10 @@ from io import BytesIO
 
 import pytest
 
-from phantomos.ai.base import ChatMessage
-from phantomos.ai.ollama_provider import OllamaProvider
-from phantomos.config import PhantomConfig
-from phantomos.exceptions import AIResponseError, AIUnavailableError
+from ai_alchemist.ai.base import ChatMessage
+from ai_alchemist.ai.ollama_provider import OllamaProvider
+from ai_alchemist.config import AlchemistConfig
+from ai_alchemist.exceptions import AIResponseError, AIUnavailableError
 
 
 class FakeResponse:
@@ -30,8 +30,8 @@ class FakeResponse:
         return False
 
 
-def _config() -> PhantomConfig:
-    return PhantomConfig(model="demo:latest", ollama_host="http://127.0.0.1:9")
+def _config() -> AlchemistConfig:
+    return AlchemistConfig(model="demo:latest", ollama_host="http://127.0.0.1:9")
 
 
 def test_status_and_generate_use_only_the_configured_host():
@@ -215,10 +215,10 @@ def test_a_second_request_is_refused_while_one_is_running():
 
 
 def test_fallback_model_is_used_only_when_it_is_already_installed():
-    from phantomos.ai.base import ModelStatus
-    from phantomos.workflows import choose_inference_model
+    from ai_alchemist.ai.base import ModelStatus
+    from ai_alchemist.workflows import choose_inference_model
 
-    config = PhantomConfig()
+    config = AlchemistConfig()
     installed_fallback = ModelStatus(
         reachable=True,
         endpoint=config.ollama_host,

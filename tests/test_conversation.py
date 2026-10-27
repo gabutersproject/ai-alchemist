@@ -2,8 +2,8 @@
 
 from pathlib import Path
 
-from phantomos.storage.conversation_store import ConversationStore
-from phantomos.storage.database import erase_all
+from ai_alchemist.storage.conversation_store import ConversationStore
+from ai_alchemist.storage.database import erase_all
 
 
 def test_disabled_store_does_not_create_a_database(tmp_path: Path):

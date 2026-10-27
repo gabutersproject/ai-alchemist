@@ -8,9 +8,9 @@ from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 
-from phantomos.ai.base import ChatMessage
-from phantomos.security.secrets import content_looks_sensitive
-from phantomos.storage.database import connect
+from ai_alchemist.ai.base import ChatMessage
+from ai_alchemist.security.secrets import content_looks_sensitive
+from ai_alchemist.storage.database import connect
 
 _MAX_STORED_CHARS = 16_000
 _MAX_ROWS = 200

@@ -11,17 +11,17 @@ from rich.table import Table
 from rich.text import Text
 from rich.theme import Theme
 
-from phantomos import APP_NAME, SECONDARY_TAGLINE, TAGLINE
-from phantomos.shell.persona import intro_text, narration
+from ai_alchemist import APP_NAME, SECONDARY_TAGLINE, TAGLINE
+from ai_alchemist.shell.persona import intro_text, narration
 
 THEME = Theme(
     {
-        "phantom.title": "bold #D4AF37",
-        "phantom.accent": "#10B981",
-        "phantom.warn": "red",
-        "phantom.muted": "dim",
-        "phantom.ok": "#10B981",
-        "phantom.bad": "red",
+        "alchemist.title": "bold #D4AF37",
+        "alchemist.accent": "#10B981",
+        "alchemist.warn": "red",
+        "alchemist.muted": "dim",
+        "alchemist.ok": "#10B981",
+        "alchemist.bad": "red",
     }
 )
 
@@ -60,31 +60,31 @@ def logo_art() -> str:
 
 def render_logo(console: Console, personality: str) -> None:
     """Print the banner and the session introduction."""
-    banner = Text(logo_art(), style="phantom.accent")
-    banner.highlight_regex(r"AI ALCHEMIST", style="phantom.title")
+    banner = Text(logo_art(), style="alchemist.accent")
+    banner.highlight_regex(r"AI ALCHEMIST", style="alchemist.title")
     console.print(banner)
     intro = intro_text(personality)
     if personality == "off":
         console.print(Text(intro))
         return
-    console.print(Panel(Text(intro), border_style="phantom.accent", box=box.SQUARE))
+    console.print(Panel(Text(intro), border_style="alchemist.accent", box=box.SQUARE))
 
 
 def render_error(console: Console, message: str) -> None:
-    console.print(Panel(Text(message), title="Error", border_style="phantom.warn"))
+    console.print(Panel(Text(message), title="Error", border_style="alchemist.warn"))
 
 
 def render_warning(console: Console, message: str) -> None:
-    console.print(Panel(Text(message), title="Warning", border_style="phantom.warn"))
+    console.print(Panel(Text(message), title="Warning", border_style="alchemist.warn"))
 
 
 def render_status(console: Console, rows: list[tuple[str, str]], *, personality: str) -> None:
     """Render a status table. The caller is responsible for true values."""
     lead = narration(personality, "facts")
     if lead:
-        console.print(Text(lead, style="phantom.muted"))
+        console.print(Text(lead, style="alchemist.muted"))
     table = Table(box=box.SIMPLE, show_header=False, pad_edge=False)
-    table.add_column("Field", style="phantom.accent")
+    table.add_column("Field", style="alchemist.accent")
     table.add_column("Value")
     for label, value in rows:
         table.add_row(label, value)
@@ -93,18 +93,18 @@ def render_status(console: Console, rows: list[tuple[str, str]], *, personality:
 
 def render_facts_header(console: Console, personality: str, key: str = "facts") -> None:
     lead = narration(personality, key)
-    console.print(Rule("Repository facts", style="phantom.accent"))
-    console.print(Text("Local inspection. Not a model response.", style="phantom.muted"))
+    console.print(Rule("Repository facts", style="alchemist.accent"))
+    console.print(Text("Local inspection. Not a model response.", style="alchemist.muted"))
     if lead:
         console.print(Text(lead))
 
 
 def render_tree(console: Console, tree: str) -> None:
-    console.print(Panel(Text(tree), title="Directory structure", border_style="phantom.accent"))
+    console.print(Panel(Text(tree), title="Directory structure", border_style="alchemist.accent"))
 
 
 def render_key_values(console: Console, title: str, rows: list[tuple[str, str]]) -> None:
-    table = Table(title=title, box=box.SIMPLE_HEAD, header_style="phantom.accent")
+    table = Table(title=title, box=box.SIMPLE_HEAD, header_style="alchemist.accent")
     table.add_column("Item")
     table.add_column("Value")
     for label, value in rows:
@@ -113,7 +113,7 @@ def render_key_values(console: Console, title: str, rows: list[tuple[str, str]])
 
 
 def render_commit_table(console: Console, rows: list[tuple[str, str, str, str]]) -> None:
-    table = Table(title="Commits", box=box.SIMPLE_HEAD, header_style="phantom.accent")
+    table = Table(title="Commits", box=box.SIMPLE_HEAD, header_style="alchemist.accent")
     table.add_column("Hash")
     table.add_column("Date")
     table.add_column("Author")
@@ -126,7 +126,7 @@ def render_commit_table(console: Console, rows: list[tuple[str, str, str, str]])
 def render_lines(console: Console, title: str, lines: list[str]) -> None:
     if not lines:
         return
-    console.print(Rule(title, style="phantom.accent"))
+    console.print(Rule(title, style="alchemist.accent"))
     for line in lines:
         console.print(Text(line))
 
@@ -142,7 +142,7 @@ def render_excerpt(console: Console, relative: str, text: str, *, max_lines: int
             Text(body),
             title=f"Excerpt: {relative}",
             subtitle="File text, not a model response",
-            border_style="phantom.accent",
+            border_style="alchemist.accent",
         )
     )
 
@@ -153,17 +153,17 @@ def render_ai_notice(console: Console, message: str) -> None:
         Panel(
             Text(message + f"\n{APP_NAME} did not generate a substitute model answer."),
             title="AI unavailable",
-            border_style="phantom.warn",
+            border_style="alchemist.warn",
         )
     )
 
 
 def render_model_header(console: Console, model: str, endpoint: str) -> None:
-    console.print(Rule("Model response", style="phantom.accent"))
+    console.print(Rule("Model response", style="alchemist.accent"))
     console.print(
         Text(
             f"Source: local Ollama model {model} at {endpoint}. This text came from the model.",
-            style="phantom.muted",
+            style="alchemist.muted",
         )
     )
 

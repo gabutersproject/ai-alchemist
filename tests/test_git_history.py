@@ -4,8 +4,8 @@ from pathlib import Path
 
 import pytest
 
-from phantomos.exceptions import NotAGitRepositoryError
-from phantomos.repository.git_history import inspect_history
+from ai_alchemist.exceptions import NotAGitRepositoryError
+from ai_alchemist.repository.git_history import inspect_history
 from tests.helpers import commit_file, make_repo
 
 

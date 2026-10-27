@@ -4,14 +4,14 @@ from pathlib import Path
 
 import pytest
 
-from phantomos.config import PhantomConfig
-from phantomos.exceptions import FileSkippedError, SecretFileError, SensitiveContentError
-from phantomos.repository.file_filters import (
+from ai_alchemist.config import AlchemistConfig
+from ai_alchemist.exceptions import FileSkippedError, SecretFileError, SensitiveContentError
+from ai_alchemist.repository.file_filters import (
     is_probably_binary,
     read_for_analysis,
     simple_ignored,
 )
-from phantomos.security.secrets import content_looks_sensitive, is_secret_path
+from ai_alchemist.security.secrets import content_looks_sensitive, is_secret_path
 
 
 def test_secret_names_and_examples(tmp_path: Path):
@@ -118,4 +118,4 @@ def test_simple_gitignore_patterns():
 
 
 def test_config_size_limit_is_positive():
-    assert PhantomConfig().max_file_bytes > 0
+    assert AlchemistConfig().max_file_bytes > 0

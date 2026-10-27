@@ -4,7 +4,7 @@ import os
 import re
 from pathlib import Path
 
-from phantomos.exceptions import PathSecurityError, RepositoryError
+from ai_alchemist.exceptions import PathSecurityError, RepositoryError
 
 _DRIVE = re.compile(r"^[A-Za-z]:")
 

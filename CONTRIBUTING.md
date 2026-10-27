@@ -40,7 +40,7 @@ On this project's Linux development machine, `python3 -m venv` was unavailable, 
 - Python 3.11 or newer. Type hints on public functions.
 - New behavior needs a pytest, including the failure path.
 - Repository text stays inside the untrusted prompt block.
-- Do not import `subprocess` or call `os.system` from `src/phantomos`. Git access goes through GitPython, with the read-only overrides in `repository/git_safety.py`.
+- Do not import `subprocess` or call `os.system` from `src/ai_alchemist`. Git access goes through GitPython, with the read-only overrides in `repository/git_safety.py`.
 - Do not add a shell tool, a write mode, telemetry, or an automatic model download.
 - Facts printed in the terminal come from the filesystem, Git, or a real model response.
 - Personality strings must not contain hashes, dates, authors, or counts that the caller did not supply.

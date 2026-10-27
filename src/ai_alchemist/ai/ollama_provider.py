@@ -7,9 +7,9 @@ import urllib.request
 from collections.abc import Callable, Sequence
 from typing import Any
 
-from phantomos.ai.base import ChatMessage, Generation, ModelStatus
-from phantomos.config import PhantomConfig
-from phantomos.exceptions import AIResponseError, AIUnavailableError
+from ai_alchemist.ai.base import ChatMessage, Generation, ModelStatus
+from ai_alchemist.config import AlchemistConfig
+from ai_alchemist.exceptions import AIResponseError, AIUnavailableError
 
 _NO_SUBSTITUTE = "AI Alchemist did not invent a replacement answer."
 _REQUEST_LOCK = threading.Lock()
@@ -30,7 +30,7 @@ class OllamaProvider:
 
     def __init__(
         self,
-        config: PhantomConfig,
+        config: AlchemistConfig,
         opener: Callable[..., Any] | None = None,
     ) -> None:
         self._config = config

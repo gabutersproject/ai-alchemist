@@ -7,15 +7,15 @@ from pathlib import Path
 
 from git import GitCommandError, Repo
 
-from phantomos.exceptions import (
+from ai_alchemist.exceptions import (
     FileSkippedError,
     PathSecurityError,
     RepositoryError,
     SecretFileError,
     SensitiveContentError,
 )
-from phantomos.security.paths import normalize_relative_parts, safe_child
-from phantomos.security.secrets import content_looks_sensitive, is_secret_path
+from ai_alchemist.security.paths import normalize_relative_parts, safe_child
+from ai_alchemist.security.secrets import content_looks_sensitive, is_secret_path
 
 EXCLUDED_DIR_NAMES = frozenset(
     {

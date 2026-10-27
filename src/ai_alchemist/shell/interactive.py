@@ -6,20 +6,20 @@ from pathlib import Path
 from rich.console import Console
 from rich.text import Text
 
-from phantomos.config import PERSONALITY_LEVELS, PhantomConfig, database_path
-from phantomos.exceptions import PhantomOSError
-from phantomos.repository.scanner import ScanReport, scan_repository
-from phantomos.security.paths import resolve_directory
-from phantomos.shell.commands import HELP_TEXT, parse_shell_line
-from phantomos.shell.display import (
+from ai_alchemist.config import PERSONALITY_LEVELS, AlchemistConfig, database_path
+from ai_alchemist.exceptions import AIAlchemistError
+from ai_alchemist.repository.scanner import ScanReport, scan_repository
+from ai_alchemist.security.paths import resolve_directory
+from ai_alchemist.shell.commands import HELP_TEXT, parse_shell_line
+from ai_alchemist.shell.display import (
     render_ai_notice,
     render_error,
     render_logo,
     render_status,
     render_warning,
 )
-from phantomos.storage.conversation_store import ConversationStore
-from phantomos.workflows import (
+from ai_alchemist.storage.conversation_store import ConversationStore
+from ai_alchemist.workflows import (
     answer_question,
     apply_personality,
     collect_environment,
@@ -38,7 +38,7 @@ class Session:
         self,
         *,
         console: Console,
-        config: PhantomConfig,
+        config: AlchemistConfig,
         repository: Path | None,
         use_ai: bool,
     ) -> None:
@@ -67,7 +67,7 @@ def _read_lines(console: Console):
     if sys.stdin.isatty():
         while True:
             try:
-                yield console.input("[phantom.accent]you[/]> ")
+                yield console.input("[alchemist.accent]you[/]> ")
             except (EOFError, KeyboardInterrupt):
                 console.print()
                 return
@@ -77,7 +77,7 @@ def _read_lines(console: Console):
 
 def _ensure_report(session: Session) -> ScanReport:
     if session.repository is None:
-        raise PhantomOSError("No repository is selected. Use: repo PATH")
+        raise AIAlchemistError("No repository is selected. Use: repo PATH")
     if session.report is None or session.report.selected_path != session.repository:
         session.report = scan_repository(session.repository, session.config)
     return session.report
@@ -112,7 +112,7 @@ def _ask(session: Session, question: str) -> None:
         return
     try:
         report = _ensure_report(session)
-    except PhantomOSError as exc:
+    except AIAlchemistError as exc:
         render_error(session.console, str(exc))
         return
     history = session.store.as_chat(session.config.max_history_messages)
@@ -174,7 +174,7 @@ def _dispatch(session: Session, name: str, argument: str) -> bool:
                 console=console,
                 config=session.config,
             )
-        except PhantomOSError as exc:
+        except AIAlchemistError as exc:
             render_error(console, str(exc))
         return True
     if name == "explain":
@@ -192,7 +192,7 @@ def _dispatch(session: Session, name: str, argument: str) -> bool:
                 console=console,
                 config=session.config,
             )
-        except PhantomOSError as exc:
+        except AIAlchemistError as exc:
             render_error(console, str(exc))
         return True
     if name == "model":
@@ -233,7 +233,7 @@ def _dispatch(session: Session, name: str, argument: str) -> bool:
             return True
         try:
             session.config = apply_personality(session.config, argument.lower())
-        except PhantomOSError as exc:
+        except AIAlchemistError as exc:
             render_error(console, str(exc))
             return True
         console.print(Text(f"Narration for this session: {session.config.personality}"))
@@ -246,7 +246,7 @@ def _dispatch(session: Session, name: str, argument: str) -> bool:
             return True
         try:
             selected = resolve_directory(Path(argument))
-        except PhantomOSError as exc:
+        except AIAlchemistError as exc:
             render_error(console, str(exc))
             return True
         session.repository = selected
@@ -268,7 +268,7 @@ def run_haunt(
     use_ai: bool,
     personality: str | None,
     console: Console,
-    config: PhantomConfig,
+    config: AlchemistConfig,
 ) -> int:
     """Open the interactive session."""
     selected: Path | None = None

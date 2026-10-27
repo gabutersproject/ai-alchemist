@@ -3,11 +3,11 @@
 import os
 from pathlib import Path
 
-from phantomos.ai.context import build_inspect_prompt
-from phantomos.config import PhantomConfig
-from phantomos.repository.code_explainer import outline_source
-from phantomos.repository.file_filters import FileRead
-from phantomos.repository.scanner import scan_repository
+from ai_alchemist.ai.context import build_inspect_prompt
+from ai_alchemist.config import AlchemistConfig
+from ai_alchemist.repository.code_explainer import outline_source
+from ai_alchemist.repository.file_filters import FileRead
+from ai_alchemist.repository.scanner import scan_repository
 from tests.helpers import commit_file, make_repo
 
 
@@ -34,7 +34,7 @@ def _project(root: Path) -> None:
 def test_scan_reports_real_files_and_skips_secrets(tmp_path: Path):
     root = tmp_path / "proj"
     _project(root)
-    report = scan_repository(root, PhantomConfig())
+    report = scan_repository(root, AlchemistConfig())
     texts = "\n".join(item.text for item in report.excerpts)
     assert report.git_root is None
     assert any(item.relative_path == "README.md" for item in report.excerpts)
@@ -48,7 +48,7 @@ def test_scan_reports_real_files_and_skips_secrets(tmp_path: Path):
     assert any("lamp-archive" in line for line in report.metadata)
     assert report.languages.get("Python") == 1
     assert "leftpad" not in report.tree
-    bundle = build_inspect_prompt(report, PhantomConfig())
+    bundle = build_inspect_prompt(report, AlchemistConfig())
     prompt = "\n".join(message.content for message in bundle.messages)
     assert "super-secret-value" not in prompt
     assert "README.md" in bundle.files_used
@@ -58,7 +58,7 @@ def test_non_git_directory_still_scans(tmp_path: Path):
     root = tmp_path / "plain"
     root.mkdir()
     (root / "README.md").write_text("Just notes.\n", encoding="utf-8")
-    report = scan_repository(root, PhantomConfig())
+    report = scan_repository(root, AlchemistConfig())
     assert report.git_root is None
     assert report.files_seen == 1
 
@@ -70,7 +70,7 @@ def test_gitignore_and_negation_use_git(tmp_path: Path):
     commit_file(repo, ".gitignore", (root / ".gitignore").read_text(encoding="utf-8"), "ignore rules")
     (root / "drop.txt").write_text("drop me\n", encoding="utf-8")
     (root / "keep.txt").write_text("keep me\n", encoding="utf-8")
-    report = scan_repository(root, PhantomConfig())
+    report = scan_repository(root, AlchemistConfig())
     assert "keep.txt" in report.source_paths
     assert "drop.txt" not in report.source_paths
     assert report.skipped_ignored >= 1
@@ -82,7 +82,7 @@ def test_simple_gitignore_without_git(tmp_path: Path):
     (root / ".gitignore").write_text("secret_notes.py\n", encoding="utf-8")
     (root / "secret_notes.py").write_text("x = 1\n", encoding="utf-8")
     (root / "kept.py").write_text("y = 2\n", encoding="utf-8")
-    report = scan_repository(root, PhantomConfig())
+    report = scan_repository(root, AlchemistConfig())
     assert "kept.py" in report.source_paths
     assert "secret_notes.py" not in report.source_paths
 
@@ -92,7 +92,7 @@ def test_large_file_is_counted_not_read_into_context(tmp_path: Path):
     root.mkdir()
     (root / "README.md").write_text("short\n", encoding="utf-8")
     (root / "huge.py").write_text("x = 1\n" * 100, encoding="utf-8")
-    config = PhantomConfig(max_file_bytes=20)
+    config = AlchemistConfig(max_file_bytes=20)
     report = scan_repository(root, config)
     assert report.skipped_large >= 1
     assert "huge.py" not in report.source_paths
@@ -125,7 +125,7 @@ def test_selecting_a_git_directory_does_not_read_it(tmp_path: Path):
     git_dir.mkdir()
     (git_dir / "README.md").write_text("SECRET-GIT-README\n", encoding="utf-8")
     (git_dir / "config").write_text("token = super-secret-value\n", encoding="utf-8")
-    report = scan_repository(git_dir, PhantomConfig())
+    report = scan_repository(git_dir, AlchemistConfig())
     combined = "\n".join(item.text for item in report.excerpts)
     assert "SECRET-GIT-README" not in combined
     assert "super-secret-value" not in combined
@@ -144,9 +144,9 @@ def test_junction_directory_is_not_walked(tmp_path: Path, monkeypatch):
         return Path(path).name == "gate"
 
     monkeypatch.setattr(os.path, "isjunction", isjunction)
-    report = scan_repository(root, PhantomConfig())
+    report = scan_repository(root, AlchemistConfig())
     assert "ok.py" in report.source_paths
     assert "gate/app.py" not in report.source_paths
-    prompt = "\n".join(message.content for message in build_inspect_prompt(report, PhantomConfig()).messages)
+    prompt = "\n".join(message.content for message in build_inspect_prompt(report, AlchemistConfig()).messages)
     assert "secret_marker" not in prompt
     assert report.skipped_symlinks >= 1

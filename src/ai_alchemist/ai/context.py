@@ -2,14 +2,14 @@
 
 from dataclasses import dataclass, field
 
-from phantomos.ai.base import ChatMessage
-from phantomos.ai.prompts import system_prompt
-from phantomos.config import PhantomConfig
-from phantomos.exceptions import FileSkippedError, SecretFileError, SensitiveContentError
-from phantomos.repository.code_explainer import CodeOutline
-from phantomos.repository.file_filters import FileRead, read_for_analysis
-from phantomos.repository.git_history import HistoryReport
-from phantomos.repository.scanner import ScanReport
+from ai_alchemist.ai.base import ChatMessage
+from ai_alchemist.ai.prompts import system_prompt
+from ai_alchemist.config import AlchemistConfig
+from ai_alchemist.exceptions import FileSkippedError, SecretFileError, SensitiveContentError
+from ai_alchemist.repository.code_explainer import CodeOutline
+from ai_alchemist.repository.file_filters import FileRead, read_for_analysis
+from ai_alchemist.repository.git_history import HistoryReport
+from ai_alchemist.repository.scanner import ScanReport
 
 UNTRUSTED_START = "<untrusted_repository_data>"
 UNTRUSTED_END = "</untrusted_repository_data>"
@@ -60,7 +60,7 @@ def _fit(text: str, budget: int) -> tuple[str, bool]:
     return text[:keep] + note, True
 
 
-def _select_files(report: ScanReport, config: PhantomConfig) -> tuple[list[FileRead], list[str], bool]:
+def _select_files(report: ScanReport, config: AlchemistConfig) -> tuple[list[FileRead], list[str], bool]:
     """Choose a small set of already-safe excerpts and source files."""
     chosen: list[FileRead] = []
     warnings: list[str] = []
@@ -118,7 +118,7 @@ def _evidence_from_files(files: list[FileRead]) -> str:
     return "\n\n".join(blocks)
 
 
-def build_inspect_prompt(report: ScanReport, config: PhantomConfig) -> PromptBundle:
+def build_inspect_prompt(report: ScanReport, config: AlchemistConfig) -> PromptBundle:
     """Ask for a summary grounded in a bounded slice of the repository."""
     files, warnings, truncated = _select_files(report, config)
     facts = [
@@ -162,7 +162,7 @@ def build_inspect_prompt(report: ScanReport, config: PhantomConfig) -> PromptBun
     )
 
 
-def build_history_prompt(report: HistoryReport, config: PhantomConfig) -> PromptBundle:
+def build_history_prompt(report: HistoryReport, config: AlchemistConfig) -> PromptBundle:
     """Ask the model to explain recorded commits, not to invent them."""
     lines: list[str] = []
     if report.oldest is not None:
@@ -199,7 +199,7 @@ def build_history_prompt(report: HistoryReport, config: PhantomConfig) -> Prompt
 def build_explain_prompt(
     source: FileRead,
     outline: CodeOutline,
-    config: PhantomConfig,
+    config: AlchemistConfig,
 ) -> PromptBundle:
     """Ask for an explanation of one file that the application already read."""
     question = (
@@ -228,7 +228,7 @@ def build_question_prompt(
     question: str,
     report: ScanReport | None,
     history: list[ChatMessage],
-    config: PhantomConfig,
+    config: AlchemistConfig,
 ) -> PromptBundle:
     """Answer a shell question with fresh repository evidence and bounded history."""
     files: list[FileRead] = []

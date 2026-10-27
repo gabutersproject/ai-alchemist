@@ -1,6 +1,6 @@
 """System instructions. Repository text is never copied into this prompt."""
 
-from phantomos.config import Personality
+from ai_alchemist.config import Personality
 
 _BASE = """You are the assistant inside AI Alchemist, a read-only developer tool.
 You help a person inspect a software repository. You are not an operating system,

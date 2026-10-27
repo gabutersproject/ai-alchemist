@@ -1,6 +1,6 @@
-# PhantomOS: The Ghost Living Inside Your Code
+# AI Alchemist: The Ghost Living Inside Your Code
 
-*Historical draft. The public name is now AI Alchemist. This post was written for the Week 4 submission while the project was still presented as PhantomOS. The behavior below is the same program: `phantomos` and `ai-alchemist` call one entry point. Suggested tags if you still publish it: `devchallenge`, `hf26challenge`. This draft does not say the entry has been accepted.*
+*Draft for the Week 4 submission. The command is `ai-alchemist`. Suggested tags if you publish it: `devchallenge`, `hf26challenge`. This draft does not say the entry has been accepted.*
 
 ---
 
@@ -8,22 +8,22 @@
 
 ## What I Built
 
-PhantomOS is a read-only terminal assistant for opening a repository you have not touched in a long time. The tagline is "The past never leaves the repository."
+AI Alchemist is a read-only terminal assistant for opening a repository you have not touched in a long time. The tagline is "Transform Ideas Into Intelligence."
 
 Week 4 asked for something spooky, or something that keeps a story from disappearing, built around open-source AI. I read that as the feeling of `git log` on a project whose author has moved on. The functions are still there. The reason they look the way they do is not. A hosted chat can guess, and it can also take the tree with it.
 
-PhantomOS splits that job in two.
+AI Alchemist splits that job in two.
 
-GhostShell (`phantomos haunt`) is the haunted session: a dry archivist that can be subtle, normal, cursed, or switched off. DeadCode (`inspect`, `history`, `explain`) is the investigator. It counts files, reads manifests, and prints real commit hashes, dates, and authors. The voice never supplies a hash the repository did not already have.
+GhostShell (`ai-alchemist haunt`) is the haunted session: a dry archivist that can be subtle, normal, cursed, or switched off. DeadCode (`inspect`, `history`, `explain`) is the investigator. It counts files, reads manifests, and prints real commit hashes, dates, and authors. The voice never supplies a hash the repository did not already have.
 
 It is not an operating system, and it does not pretend to speak to the dead. If Ollama is down, the facts still print. The program says the model is unavailable. It does not invent a ghost paragraph and call it an answer.
 
 ## Demo
 
-There is no hosted URL. PhantomOS is a local CLI, and inference stays on the machine. This transcript is from Linux, with color turned off, against the sample lamp archive in the repo. Ollama was not contacted.
+There is no hosted URL. AI Alchemist is a local CLI, and inference stays on the machine. This transcript is from Linux, with color turned off, against the sample lamp archive in the repo. Ollama was not contacted.
 
 ```text
-phantomos inspect examples/sample_repository --no-ai --personality normal
+ai-alchemist inspect examples/sample_repository --no-ai --personality normal
 ```
 
 ```text
@@ -39,7 +39,7 @@ project.name = lamp-archive
 When two extensions tie, the sentence names the one that sorts first. The table still lists both. The number is a count from the walk, not a line written into the theme.
 
 ```text
-phantomos explain examples/sample_repository --file src/catalog.py --no-ai --personality subtle
+ai-alchemist explain examples/sample_repository --file src/catalog.py --no-ai --personality subtle
 ```
 
 ```text
@@ -60,27 +60,27 @@ python -m venv .venv
 source .venv/bin/activate
 python -m pip install -e ".[dev]"
 
-phantomos inspect examples/sample_repository --no-ai
-phantomos explain examples/sample_repository --file src/catalog.py --no-ai
-phantomos history examples/sample_repository --no-ai
-phantomos doctor
+ai-alchemist inspect examples/sample_repository --no-ai
+ai-alchemist explain examples/sample_repository --file src/catalog.py --no-ai
+ai-alchemist history examples/sample_repository --no-ai
+ai-alchemist doctor
 ```
 
-`phantomos doctor` exits 2 when Git or Ollama is missing. It prints the `ollama pull` line and does not run it.
+`ai-alchemist doctor` exits 2 when Git or Ollama is missing. It prints the `ollama pull` line and does not run it.
 
 A screen recording was not made for this draft. If you want a moving demo before you publish, record the three commands above in a terminal. Twenty seconds is enough.
 
 ## Code
 
-{% github gabutersproject/phantomos %}
+{% github gabutersproject/ai-alchemist %}
 
-[github.com/gabutersproject/phantomos](https://github.com/gabutersproject/phantomos)
+[github.com/gabutersproject/ai-alchemist](https://github.com/gabutersproject/ai-alchemist)
 
 The application is MIT. The model weights are not. Upstream Qwen2.5-Coder 3B is under the Qwen Research License. The 1.5B checkpoint is Apache-2.0. An Ollama tag can differ from those snapshots, so the model card on the tag you pull is the one that counts.
 
 ## How I Built It
 
-The open piece is local inference through [Ollama](https://ollama.com/). The recommended tag is `qwen2.5-coder:3b`, aimed at a laptop with about 8 GB of RAM and no GPU. The fallback is `qwen2.5-coder:1.5b`, and only if that tag is already installed. PhantomOS does not download weights, does not send an API key, and does not call a commercial model API. The default host is `http://127.0.0.1:11434`. Point it somewhere else and the tool warns you.
+The open piece is local inference through [Ollama](https://ollama.com/). The recommended tag is `qwen2.5-coder:3b`, aimed at a laptop with about 8 GB of RAM and no GPU. The fallback is `qwen2.5-coder:1.5b`, and only if that tag is already installed. AI Alchemist does not download weights, does not send an API key, and does not call a commercial model API. The default host is `http://127.0.0.1:11434`. Point it somewhere else and the tool warns you.
 
 The program is Python 3.11 or newer. Typer parses the commands. Rich draws the terminal. GitPython reads commits and asks `check-ignore`. Pydantic checks the config before it is saved. Nothing in that list is a CUDA package.
 
@@ -91,7 +91,7 @@ The path that matters:
 3. A small slice of that evidence is wrapped in `<untrusted_repository_data>` and sent to Ollama, one request at a time, with a cap on generated tokens. Repository text cannot close the wrapper by repeating the delimiter. A `tool_calls` reply is rejected. The model has no shell.
 4. If the request times out, the JSON is garbage, or the service refuses the connection, you get the error and the facts you already had. There is no canned completion.
 
-`phantomos haunt` is not a system shell. `help`, `scan`, `history`, `explain`, and `exit` are commands. Any other line is a question. `ls` is not executed.
+`ai-alchemist haunt` is not a system shell. `help`, `scan`, `history`, `explain`, and `exit` are commands. Any other line is a question. `ls` is not executed.
 
 A coding agent in Cursor did a large part of the implementation, with the read-only rules written down first. The tests use a fake Ollama client. They do not need a running model. On the machine where the suite last ran, Ruff was clean and pytest reported 71 passed.
 
@@ -111,6 +111,6 @@ Local inference is not a magic circle. A hostile repository can still try to con
 
 The sample in the repo is a lamp catalog from a workshop that closed. Brightness was stored as plain integers. Nobody wrote down the unit. `average_brightness` drops the last reading and still divides by the full length.
 
-That is the ghost I wanted. Not a jump scare. A small mistake that outlived the person who would have explained it. PhantomOS can point at line 4. It cannot tell you whether the off-by-one was a rush or a belief about how the mean should work. The commit message is the only intent on record, and even that is just the message.
+That is the ghost I wanted. Not a jump scare. A small mistake that outlived the person who would have explained it. AI Alchemist can point at line 4. It cannot tell you whether the off-by-one was a rush or a belief about how the mean should work. The commit message is the only intent on record, and even that is just the message.
 
 When the model is silent, the line on screen is still a count from disk: one Markdown file, one Python file, nothing awakened that was not there. The past stays in the repository. The tool does not get to invent the rest.

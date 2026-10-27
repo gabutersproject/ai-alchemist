@@ -13,7 +13,7 @@ from urllib.parse import urlparse
 
 from pydantic import BaseModel, ConfigDict, Field, ValidationError, field_validator
 
-from phantomos.exceptions import ConfigError
+from ai_alchemist.exceptions import ConfigError
 
 Personality = Literal["subtle", "normal", "cursed", "off"]
 PERSONALITY_LEVELS: tuple[str, ...] = ("subtle", "normal", "cursed", "off")
@@ -29,20 +29,20 @@ EXAMPLE_MODEL = RECOMMENDED_MODEL
 
 _MODEL_RE_TEXT = r"^[A-Za-z0-9_.:@+/-]{1,128}$"
 _ENV_FIELDS = {
-    "PHANTOMOS_MODEL": "model",
-    "PHANTOMOS_FALLBACK_MODEL": "fallback_model",
-    "PHANTOMOS_USE_FALLBACK": "use_fallback",
-    "PHANTOMOS_OLLAMA_HOST": "ollama_host",
-    "PHANTOMOS_MAX_OUTPUT_TOKENS": "max_output_tokens",
-    "PHANTOMOS_PERSONALITY": "personality",
-    "PHANTOMOS_PERSIST": "persist_conversations",
-    "PHANTOMOS_CONNECT_TIMEOUT": "connect_timeout_seconds",
-    "PHANTOMOS_REQUEST_TIMEOUT": "request_timeout_seconds",
-    "PHANTOMOS_STREAM": "stream",
+    "AI_ALCHEMIST_MODEL": "model",
+    "AI_ALCHEMIST_FALLBACK_MODEL": "fallback_model",
+    "AI_ALCHEMIST_USE_FALLBACK": "use_fallback",
+    "AI_ALCHEMIST_OLLAMA_HOST": "ollama_host",
+    "AI_ALCHEMIST_MAX_OUTPUT_TOKENS": "max_output_tokens",
+    "AI_ALCHEMIST_PERSONALITY": "personality",
+    "AI_ALCHEMIST_PERSIST": "persist_conversations",
+    "AI_ALCHEMIST_CONNECT_TIMEOUT": "connect_timeout_seconds",
+    "AI_ALCHEMIST_REQUEST_TIMEOUT": "request_timeout_seconds",
+    "AI_ALCHEMIST_STREAM": "stream",
 }
 
 
-class PhantomConfig(BaseModel):
+class AlchemistConfig(BaseModel):
     """Validated settings. Unknown keys are rejected."""
 
     model_config = ConfigDict(extra="forbid")
@@ -102,25 +102,25 @@ def is_loopback_host(host: str) -> bool:
 def data_dir(environ: Mapping[str, str] | None = None, *, platform_name: str | None = None) -> Path:
     """Platform-aware application data directory."""
     env = os.environ if environ is None else environ
-    override = env.get("PHANTOMOS_DATA_DIR")
+    override = env.get("AI_ALCHEMIST_DATA_DIR")
     if override:
         return Path(override).expanduser()
     system = platform_name or os.name
     if system == "nt":
         local = env.get("LOCALAPPDATA")
         if local:
-            return Path(local) / "phantomos"
-        return Path.home() / "AppData" / "Local" / "phantomos"
+            return Path(local) / "ai-alchemist"
+        return Path.home() / "AppData" / "Local" / "ai-alchemist"
     xdg = env.get("XDG_DATA_HOME")
     if xdg:
-        return Path(xdg) / "phantomos"
-    return Path.home() / ".local" / "share" / "phantomos"
+        return Path(xdg) / "ai-alchemist"
+    return Path.home() / ".local" / "share" / "ai-alchemist"
 
 
 def config_path(environ: Mapping[str, str] | None = None) -> Path:
     """Path of the JSON configuration file."""
     env = os.environ if environ is None else environ
-    override = env.get("PHANTOMOS_CONFIG")
+    override = env.get("AI_ALCHEMIST_CONFIG")
     if override:
         return Path(override).expanduser()
     return data_dir(env) / "config.json"
@@ -141,7 +141,7 @@ def _parse_bool(raw: str) -> bool:
 
 
 def _coerce_env(field: str, raw: str) -> Any:
-    annotation = PhantomConfig.model_fields[field].annotation
+    annotation = AlchemistConfig.model_fields[field].annotation
     if annotation is bool:
         return _parse_bool(raw)
     if annotation is int:
@@ -183,7 +183,7 @@ def _read_config_file(environ: Mapping[str, str] | None = None) -> dict[str, Any
     return loaded
 
 
-def load_config(environ: Mapping[str, str] | None = None) -> PhantomConfig:
+def load_config(environ: Mapping[str, str] | None = None) -> AlchemistConfig:
     """Load defaults, then the config file, then environment overrides."""
     env = os.environ if environ is None else environ
     data = _read_config_file(env)
@@ -192,12 +192,12 @@ def load_config(environ: Mapping[str, str] | None = None) -> PhantomConfig:
         if raw is not None and raw != "":
             data[field] = _coerce_env(field, raw)
     try:
-        return PhantomConfig.model_validate(data)
+        return AlchemistConfig.model_validate(data)
     except ValidationError as exc:
         raise ConfigError(f"Invalid configuration: {exc}") from exc
 
 
-def save_config(config: PhantomConfig, environ: Mapping[str, str] | None = None) -> Path:
+def save_config(config: AlchemistConfig, environ: Mapping[str, str] | None = None) -> Path:
     """Write configuration atomically. Environment variables are not stored."""
     path = config_path(environ)
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -208,15 +208,15 @@ def save_config(config: PhantomConfig, environ: Mapping[str, str] | None = None)
     return path
 
 
-def update_config(key: str, raw_value: str, environ: Mapping[str, str] | None = None) -> PhantomConfig:
+def update_config(key: str, raw_value: str, environ: Mapping[str, str] | None = None) -> AlchemistConfig:
     """Validate and persist one setting."""
-    if key not in PhantomConfig.model_fields:
-        known = ", ".join(sorted(PhantomConfig.model_fields))
+    if key not in AlchemistConfig.model_fields:
+        known = ", ".join(sorted(AlchemistConfig.model_fields))
         raise ConfigError(f"Unknown setting '{key}'. Known settings: {known}")
     current = _read_config_file(environ)
     current[key] = _coerce_env(key, raw_value)
     try:
-        updated = PhantomConfig.model_validate(current)
+        updated = AlchemistConfig.model_validate(current)
     except ValidationError as exc:
         raise ConfigError(f"Invalid value for {key}: {exc}") from exc
     save_config(updated, environ)
@@ -227,7 +227,7 @@ def ensure_data_dir_writable(directory: Path) -> tuple[bool, str]:
     """Create the data directory and probe it with a temporary file."""
     try:
         directory.mkdir(parents=True, exist_ok=True)
-        probe = directory / ".phantomos-write-probe"
+        probe = directory / ".ai-alchemist-write-probe"
         probe.write_text("ok", encoding="utf-8")
         probe.unlink()
     except OSError as exc:
