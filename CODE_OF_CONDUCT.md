@@ -1,6 +1,6 @@
 # Code of Conduct
 
-PhantomOS is a small open-source developer tool. People who use it, read it, or send patches are expected to treat one another with ordinary professional respect.
+AI Alchemist is a small open-source developer tool. People who use it, read it, or send patches are expected to treat one another with ordinary professional respect.
 
 ## Expected behavior
 
@@ -21,4 +21,4 @@ Open an issue in this repository when it has a public issue tracker, or contact 
 
 Maintainers may reject a patch or a conversation that breaks these expectations. There is no separate enforcement committee.
 
-This is the project's own short standard. It is not a claim that PhantomOS has adopted a particular foundation's enforcement process.
+This is the project's own short standard. It is not a claim that AI Alchemist has adopted a particular foundation's enforcement process.

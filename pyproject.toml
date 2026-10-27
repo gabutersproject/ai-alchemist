@@ -1,13 +1,13 @@
 [project]
-name = "phantomos"
+name = "ai-alchemist"
 version = "0.1.0"
-description = "A read-only terminal assistant that investigates repositories with optional local open-weight models."
+description = "AI Alchemist — Transform ideas into intelligence. A read-only terminal assistant for local repository inspection."
 readme = "README.md"
 requires-python = ">=3.11"
 license = "MIT"
 license-files = ["LICENSE"]
-authors = [{ name = "PhantomOS Contributors" }]
-keywords = ["cli", "git", "ollama", "developer-tools", "privacy"]
+authors = [{ name = "AI Alchemist Contributors" }]
+keywords = ["cli", "git", "ollama", "developer-tools", "privacy", "ai"]
 classifiers = [
   "Development Status :: 4 - Beta",
   "Environment :: Console",
@@ -33,6 +33,7 @@ dev = [
 ]
 
 [project.scripts]
+ai-alchemist = "phantomos.cli:app"
 phantomos = "phantomos.cli:app"
 
 [build-system]
