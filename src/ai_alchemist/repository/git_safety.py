@@ -36,7 +36,7 @@ def ensure_git_readonly_env() -> None:
     global _INSTALLED
     if _INSTALLED:
         return
-    hooks = Path(tempfile.mkdtemp(prefix="phantomos-no-hooks-"))
+    hooks = Path(tempfile.mkdtemp(prefix="ai-alchemist-no-hooks-"))
     values = {
         "core.fsmonitor": "",
         "core.hooksPath": str(hooks),

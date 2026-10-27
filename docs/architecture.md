@@ -1,6 +1,6 @@
 # Architecture
 
-AI Alchemist is a read-only terminal assistant. It is not an operating system. `phantomos haunt` and `ai-alchemist haunt` open the same interactive session. `inspect`, `history`, and `explain` are the inspection commands. Both surfaces use the same security boundary and the same optional Ollama provider. The Python package directory remains `src/phantomos`.
+AI Alchemist is a read-only terminal assistant. It is not an operating system. `ai-alchemist haunt` opens the interactive session. `inspect`, `history`, and `explain` are the one-shot inspection commands. Both use the same security boundary and the same optional Ollama provider. The Python package is `src/ai_alchemist`.
 
 ```
 Typer CLI
@@ -17,20 +17,20 @@ Typer CLI
 
 | Path | Responsibility |
 | --- | --- |
-| `src/phantomos/cli.py` | Commands and exit codes |
-| `src/phantomos/workflows.py` | Shared behavior for the CLI and the shell |
-| `src/phantomos/config.py` | Pydantic settings, platform data directory |
-| `src/phantomos/security/paths.py` | Traversal, symlink, and Windows junction containment |
-| `src/phantomos/security/secrets.py` | Credential filenames and content markers |
-| `src/phantomos/repository/scanner.py` | Trees, READMEs, manifests, counts |
-| `src/phantomos/repository/git_history.py` | Read-only commits and branches |
-| `src/phantomos/repository/git_safety.py` | Git config overrides so a repository cannot name a program |
-| `src/phantomos/repository/code_explainer.py` | Static outlines, never execution |
-| `src/phantomos/ai/ollama_provider.py` | `GET /api/tags`, `POST /api/chat` |
-| `src/phantomos/ai/prompts.py` | Persona instructions, no repository text |
-| `src/phantomos/ai/context.py` | Bounded evidence blocks |
-| `src/phantomos/shell/` | Logo, panels, command parser, session loop |
-| `src/phantomos/storage/` | Optional SQLite memory |
+| `src/ai_alchemist/cli.py` | Commands and exit codes |
+| `src/ai_alchemist/workflows.py` | Shared behavior for the CLI and the shell |
+| `src/ai_alchemist/config.py` | Pydantic settings, platform data directory |
+| `src/ai_alchemist/security/paths.py` | Traversal, symlink, and Windows junction containment |
+| `src/ai_alchemist/security/secrets.py` | Credential filenames and content markers |
+| `src/ai_alchemist/repository/scanner.py` | Trees, READMEs, manifests, counts |
+| `src/ai_alchemist/repository/git_history.py` | Read-only commits and branches |
+| `src/ai_alchemist/repository/git_safety.py` | Git config overrides so a repository cannot name a program |
+| `src/ai_alchemist/repository/code_explainer.py` | Static outlines, never execution |
+| `src/ai_alchemist/ai/ollama_provider.py` | `GET /api/tags`, `POST /api/chat` |
+| `src/ai_alchemist/ai/prompts.py` | Persona instructions, no repository text |
+| `src/ai_alchemist/ai/context.py` | Bounded evidence blocks |
+| `src/ai_alchemist/shell/` | Logo, panels, command parser, session loop |
+| `src/ai_alchemist/storage/` | Optional SQLite memory |
 
 ## What is trusted
 
@@ -38,7 +38,7 @@ Trusted inputs are the operator's command-line flags, interactive commands (`hel
 
 Repository files, README text, comments, commit messages, manifest fields, and static outlines are untrusted evidence. They are wrapped in `<untrusted_repository_data>` after any copy of that delimiter has been stripped from the evidence. The system prompt is built only from static strings in `prompts.py`.
 
-Natural-language lines in `ai-alchemist haunt` are questions. They are never passed to a system shell. `phantomos haunt` is the same session.
+Natural-language lines in `ai-alchemist haunt` are questions. They are never passed to a system shell.
 
 ## Inference
 
@@ -48,7 +48,7 @@ File inspection, counts, and Git metadata do not require Ollama.
 
 ## Persistence
 
-Conversation persistence is off by default. When enabled, SQLite at the application data directory stores role, text, time, and repository path. Turns that match credential markers stay in process memory only. `ai-alchemist memory clear` deletes stored rows even if persistence is currently off. The data directory name is still `phantomos`.
+Conversation persistence is off by default. When enabled, SQLite in the `ai-alchemist` application data directory stores role, text, time, and repository path. Turns that match credential markers stay in process memory only. `ai-alchemist memory clear` deletes stored rows even if persistence is currently off.
 
 ## Read-only boundary
 

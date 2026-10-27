@@ -1,8 +1,8 @@
 """Narration can be turned off without dropping factual fields."""
 
-from phantomos.repository.git_history import CommitInfo
-from phantomos.shell.persona import discovery_line, intro_text, narration
-from phantomos.workflows import _format_commit
+from ai_alchemist.repository.git_history import CommitInfo
+from ai_alchemist.shell.persona import discovery_line, intro_text, narration
+from ai_alchemist.workflows import _format_commit
 
 _HORROR = ("haunted", "cursed", "spirit", "sleeping", "ghost")
 

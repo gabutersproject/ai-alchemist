@@ -5,9 +5,9 @@ from pathlib import Path
 
 from git import GitCommandError, InvalidGitRepositoryError, NoSuchPathError, Repo
 
-from phantomos.exceptions import NotAGitRepositoryError, RepositoryError
-from phantomos.repository.git_safety import open_git_repository
-from phantomos.security.paths import resolve_directory
+from ai_alchemist.exceptions import NotAGitRepositoryError, RepositoryError
+from ai_alchemist.repository.git_safety import open_git_repository
+from ai_alchemist.security.paths import resolve_directory
 
 _INTERESTING_WORDS = (
     "security",

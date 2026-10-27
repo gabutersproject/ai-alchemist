@@ -8,9 +8,9 @@ from pathlib import Path
 
 from git import InvalidGitRepositoryError, NoSuchPathError, Repo
 
-from phantomos.config import PhantomConfig
-from phantomos.exceptions import FileSkippedError, SecretFileError, SensitiveContentError
-from phantomos.repository.file_filters import (
+from ai_alchemist.config import AlchemistConfig
+from ai_alchemist.exceptions import FileSkippedError, SecretFileError, SensitiveContentError
+from ai_alchemist.repository.file_filters import (
     LOCKFILE_NAMES,
     MANIFEST_NAMES,
     README_NAMES,
@@ -24,9 +24,9 @@ from phantomos.repository.file_filters import (
     read_for_analysis,
     simple_ignored,
 )
-from phantomos.repository.git_safety import open_git_repository
-from phantomos.security.paths import is_symlink_or_junction, resolve_directory
-from phantomos.security.secrets import is_secret_path
+from ai_alchemist.repository.git_safety import open_git_repository
+from ai_alchemist.security.paths import is_symlink_or_junction, resolve_directory
+from ai_alchemist.security.secrets import is_secret_path
 
 
 @dataclass
@@ -155,7 +155,7 @@ def _build_tree(root: Path, *, max_depth: int, max_entries: int) -> str:
     return "\n".join(lines)
 
 
-def scan_repository(path: Path, config: PhantomConfig) -> ScanReport:
+def scan_repository(path: Path, config: AlchemistConfig) -> ScanReport:
     """Walk `path` without following links that leave it, and without executing files."""
     selected = resolve_directory(path)
     git_root, bare = find_git_root(selected)

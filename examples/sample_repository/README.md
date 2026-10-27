@@ -15,4 +15,4 @@ ai-alchemist inspect examples/sample_repository --no-ai
 ai-alchemist explain examples/sample_repository --file src/catalog.py --no-ai
 ```
 
-`phantomos` is the same program. To exercise history, initialize Git in this directory yourself, commit the files, and then run `ai-alchemist history`.
+To exercise history, initialize Git in this directory yourself, commit the files, and then run `ai-alchemist history`.

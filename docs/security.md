@@ -10,7 +10,7 @@ AI Alchemist is read-only by design. The controls below are in application code.
 - Repository Git config cannot choose a program. AI Alchemist overrides `core.fsmonitor`, `core.hooksPath`, `core.sshCommand`, `core.pager`, `diff.external`, `credential.helper`, and `protocol.ext.allow` for its own Git subprocesses. The repository config file is not rewritten.
 - No writes to the repository under inspection.
 - No automatic dependency installation.
-- No automatic model download. `ai-alchemist model` (and the `phantomos model` alias) prints `ollama pull <name>` and does not run it.
+- No automatic model download. `ai-alchemist model` prints `ollama pull <name>` and does not run it.
 - No tool list is sent to Ollama. A `tool_calls` payload is rejected and not executed.
 - No telemetry or third-party model API. The HTTP client talks only to the configured Ollama URL.
 - Redirects from that URL are refused, so a local service cannot bounce the prompt elsewhere without the operator noticing a failure.
@@ -38,7 +38,7 @@ AI Alchemist is read-only by design. The controls below are in application code.
 
 ## Operator checks
 
-`ai-alchemist doctor` reports Python, Git, the config file, the data directory, the terminal, Ollama, and the configured model. `phantomos doctor` is the same check. It does not install or download anything. Exit code `0` means those checks passed. Exit code `2` means inspection can still run but Git or the local model is unavailable. Exit code `1` means Python, configuration, or the data directory failed.
+`ai-alchemist doctor` reports Python, Git, the config file, the data directory, the terminal, Ollama, and the configured model. It does not install or download anything. Exit code `0` means those checks passed. Exit code `2` means inspection can still run but Git or the local model is unavailable. Exit code `1` means Python, configuration, or the data directory failed.
 
 ## Out of scope
 

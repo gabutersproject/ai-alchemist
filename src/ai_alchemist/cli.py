@@ -5,21 +5,21 @@ from typing import Annotated
 
 import typer
 
-from phantomos import APP_NAME, TAGLINE, __version__
-from phantomos.config import (
-    PhantomConfig,
+from ai_alchemist import APP_NAME, TAGLINE, __version__
+from ai_alchemist.config import (
+    AlchemistConfig,
     config_path,
     database_path,
     load_config,
     overriding_env_var,
     update_config,
 )
-from phantomos.exceptions import PhantomOSError
-from phantomos.logging_config import configure_logging
-from phantomos.shell.display import make_console, render_error, render_key_values, render_warning
-from phantomos.shell.interactive import run_haunt
-from phantomos.storage.database import erase_all
-from phantomos.workflows import (
+from ai_alchemist.exceptions import AIAlchemistError
+from ai_alchemist.logging_config import configure_logging
+from ai_alchemist.shell.display import make_console, render_error, render_key_values, render_warning
+from ai_alchemist.shell.interactive import run_haunt
+from ai_alchemist.storage.database import erase_all
+from ai_alchemist.workflows import (
     apply_personality,
     run_doctor,
     run_explain,
@@ -69,7 +69,7 @@ def _invoke(func) -> None:
     console = make_console()
     try:
         code = func(console)
-    except PhantomOSError as exc:
+    except AIAlchemistError as exc:
         render_error(console, str(exc))
         raise typer.Exit(code=exc.exit_code) from exc
     except KeyboardInterrupt:
@@ -78,7 +78,7 @@ def _invoke(func) -> None:
         raise typer.Exit(code=code)
 
 
-def _settings(personality: str | None) -> PhantomConfig:
+def _settings(personality: str | None) -> AlchemistConfig:
     return apply_personality(load_config(), personality)
 
 
@@ -199,7 +199,7 @@ def config_show() -> None:
     console = make_console()
     try:
         config = load_config()
-    except PhantomOSError as exc:
+    except AIAlchemistError as exc:
         render_error(console, str(exc))
         raise typer.Exit(code=exc.exit_code) from exc
     rows = [(name, str(value)) for name, value in config.model_dump(mode="json").items()]
@@ -225,7 +225,7 @@ def config_set(
     console = make_console()
     try:
         updated = update_config(key, value)
-    except PhantomOSError as exc:
+    except AIAlchemistError as exc:
         render_error(console, str(exc))
         raise typer.Exit(code=exc.exit_code) from exc
     saved = updated.model_dump(mode="json")[key]
@@ -245,7 +245,7 @@ def memory_path() -> None:
     console = make_console()
     try:
         config = load_config()
-    except PhantomOSError as exc:
+    except AIAlchemistError as exc:
         render_error(console, str(exc))
         raise typer.Exit(code=exc.exit_code) from exc
     path = database_path()

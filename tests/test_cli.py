@@ -7,11 +7,11 @@ from pathlib import Path
 from rich.console import Console
 from typer.testing import CliRunner
 
-from phantomos.ai.base import ModelStatus
-from phantomos.cli import app
-from phantomos.config import PhantomConfig
-from phantomos.shell.display import THEME, make_console
-from phantomos.workflows import run_model
+from ai_alchemist.ai.base import ModelStatus
+from ai_alchemist.cli import app
+from ai_alchemist.config import AlchemistConfig
+from ai_alchemist.shell.display import THEME, make_console
+from ai_alchemist.workflows import run_model
 from tests.helpers import commit_file, make_repo
 
 runner = CliRunner()
@@ -156,7 +156,7 @@ def test_no_color_disables_rich_color(monkeypatch):
         highlight=False,
         width=80,
     )
-    local.print("[phantom.accent]Readable[/]")
+    local.print("[alchemist.accent]Readable[/]")
     assert "\x1b" not in buffer.getvalue()
     result = runner.invoke(app, ["--help"])
     assert "\x1b" not in (result.stdout or "")
@@ -196,12 +196,12 @@ def test_non_loopback_model_warning_uses_a_stub(monkeypatch):
                 detail="stubbed local check",
             )
 
-    monkeypatch.setattr("phantomos.workflows.OllamaProvider", StubProvider)
+    monkeypatch.setattr("ai_alchemist.workflows.OllamaProvider", StubProvider)
     buffer = StringIO()
     console = Console(file=buffer, no_color=True, width=100, highlight=False, theme=THEME)
     code = run_model(
         console,
-        PhantomConfig(model="demo:latest", ollama_host="http://example.com:11434"),
+        AlchemistConfig(model="demo:latest", ollama_host="http://example.com:11434"),
     )
     text = buffer.getvalue()
     assert code == 0

@@ -5,8 +5,8 @@ from pathlib import Path
 
 import pytest
 
-from phantomos.exceptions import PathSecurityError, RepositoryError
-from phantomos.security.paths import resolve_directory, safe_child
+from ai_alchemist.exceptions import PathSecurityError, RepositoryError
+from ai_alchemist.security.paths import resolve_directory, safe_child
 
 
 def test_rejects_missing_and_file_paths(tmp_path: Path):

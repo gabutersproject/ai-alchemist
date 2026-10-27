@@ -5,8 +5,8 @@ import os
 
 
 def configure_logging() -> None:
-    """Send warnings to stderr. Debug requires PHANTOMOS_DEBUG."""
-    level = logging.DEBUG if os.environ.get("PHANTOMOS_DEBUG") else logging.WARNING
+    """Send warnings to stderr. Debug requires AI_ALCHEMIST_DEBUG."""
+    level = logging.DEBUG if os.environ.get("AI_ALCHEMIST_DEBUG") else logging.WARNING
     root = logging.getLogger()
     if root.handlers:
         root.setLevel(level)

@@ -11,33 +11,33 @@ from rich.console import Console
 from rich.table import Table
 from rich.text import Text
 
-from phantomos.ai.base import ModelStatus
-from phantomos.ai.context import (
+from ai_alchemist.ai.base import ModelStatus
+from ai_alchemist.ai.context import (
     build_explain_prompt,
     build_history_prompt,
     build_inspect_prompt,
     build_question_prompt,
 )
-from phantomos.ai.ollama_provider import OllamaProvider
-from phantomos.config import (
+from ai_alchemist.ai.ollama_provider import OllamaProvider
+from ai_alchemist.config import (
     EXAMPLE_MODEL,
     FALLBACK_MODEL,
     PERSONALITY_LEVELS,
     RECOMMENDED_MODEL,
-    PhantomConfig,
+    AlchemistConfig,
     config_path,
     data_dir,
     ensure_data_dir_writable,
     is_loopback_host,
     load_config,
 )
-from phantomos.exceptions import ConfigError, PhantomOSError
-from phantomos.repository.code_explainer import excerpt, outline_source
-from phantomos.repository.file_filters import read_for_analysis
-from phantomos.repository.git_history import CommitInfo, inspect_history
-from phantomos.repository.git_safety import ensure_git_readonly_env
-from phantomos.repository.scanner import ScanReport, find_git_root, scan_repository
-from phantomos.shell.display import (
+from ai_alchemist.exceptions import AIAlchemistError, ConfigError
+from ai_alchemist.repository.code_explainer import excerpt, outline_source
+from ai_alchemist.repository.file_filters import read_for_analysis
+from ai_alchemist.repository.git_history import CommitInfo, inspect_history
+from ai_alchemist.repository.git_safety import ensure_git_readonly_env
+from ai_alchemist.repository.scanner import ScanReport, find_git_root, scan_repository
+from ai_alchemist.shell.display import (
     render_ai_notice,
     render_commit_table,
     render_excerpt,
@@ -50,7 +50,7 @@ from phantomos.shell.display import (
     render_warning,
     stream_token,
 )
-from phantomos.shell.persona import discovery_line, narration
+from ai_alchemist.shell.persona import discovery_line, narration
 
 
 @dataclass
@@ -66,7 +66,7 @@ class EnvironmentReport:
     data_dir_detail: str
     config_ok: bool
     config_error: str | None
-    config: PhantomConfig | None
+    config: AlchemistConfig | None
     color_disabled: bool
     is_tty: bool
     ollama_detail: str
@@ -100,7 +100,7 @@ def git_binary_status() -> tuple[bool, str]:
     return True, version
 
 
-def collect_environment(config: PhantomConfig | None = None) -> EnvironmentReport:
+def collect_environment(config: AlchemistConfig | None = None) -> EnvironmentReport:
     """Probe Python, Git, configuration, the data directory, and local Ollama."""
     python_ok = sys.version_info >= (3, 11)
     git_ok, git_detail = git_binary_status()
@@ -120,7 +120,7 @@ def collect_environment(config: PhantomConfig | None = None) -> EnvironmentRepor
     else:
         try:
             status = OllamaProvider(config).status()
-        except PhantomOSError as exc:
+        except AIAlchemistError as exc:
             reachable = False
             ollama_detail = str(exc)
         else:
@@ -240,7 +240,7 @@ def _format_commit(label: str, commit: CommitInfo) -> str:
 
 
 def choose_inference_model(
-    config: PhantomConfig,
+    config: AlchemistConfig,
     status: ModelStatus,
 ) -> tuple[str | None, str | None]:
     """Pick an installed local tag. Return `(model, notice)` or `(None, reason)`.
@@ -275,7 +275,7 @@ def _note_model_fallback(console: Console, text: str | None) -> None:
 
 
 def request_model(
-    config: PhantomConfig,
+    config: AlchemistConfig,
     messages: list,
     console: Console,
 ) -> str | None:
@@ -283,7 +283,7 @@ def request_model(
     provider = OllamaProvider(config)
     try:
         status = provider.status()
-    except PhantomOSError as exc:
+    except AIAlchemistError as exc:
         render_ai_notice(console, str(exc))
         return None
     chosen, notice = choose_inference_model(config, status)
@@ -309,7 +309,7 @@ def request_model(
             generation = provider.generate(messages, stream=False, model=chosen)
             render_model_header(console, chosen, config.ollama_host)
             render_model_text(console, generation.text)
-    except PhantomOSError as exc:
+    except AIAlchemistError as exc:
         if started:
             console.print()
             render_warning(
@@ -328,7 +328,7 @@ def run_inspect(
     *,
     use_ai: bool,
     console: Console,
-    config: PhantomConfig,
+    config: AlchemistConfig,
 ) -> int:
     """Scan a directory and optionally ask the local model to summarize it."""
     report = scan_repository(path, config)
@@ -429,13 +429,13 @@ def run_history(
     limit: int | None,
     use_ai: bool,
     console: Console,
-    config: PhantomConfig,
+    config: AlchemistConfig,
 ) -> int:
     """Show recorded Git metadata and optionally ask the model to discuss it."""
     report = inspect_history(path, limit=limit or config.history_limit)
     render_facts_header(console, config.personality, "history")
     for note in report.notes:
-        console.print(Text(note, style="phantom.muted"))
+        console.print(Text(note, style="alchemist.muted"))
     console.print(Text(f"Repository: {report.git_root}"))
     if report.unborn:
         console.print(Text("This repository has no commits yet."))
@@ -468,7 +468,7 @@ def run_history(
         ],
     )
     if report.branches:
-        table = Table(title="Local branches", header_style="phantom.accent")
+        table = Table(title="Local branches", header_style="alchemist.accent")
         table.add_column("Branch")
         table.add_column("Commit")
         table.add_column("Active")
@@ -485,7 +485,7 @@ def run_history(
         Text(
             "Closer look: keyword and merge heuristic over the listed commits. "
             "This is not a judgment of importance, abandonment, or author intent.",
-            style="phantom.muted",
+            style="alchemist.muted",
         )
     )
     if report.interesting:
@@ -512,10 +512,10 @@ def run_explain(
     *,
     use_ai: bool,
     console: Console,
-    config: PhantomConfig,
+    config: AlchemistConfig,
 ) -> int:
     """Explain one file with static analysis and, when available, the local model."""
-    from phantomos.security.paths import resolve_directory
+    from ai_alchemist.security.paths import resolve_directory
 
     root = resolve_directory(path)
     source = read_for_analysis(root, relative, max_bytes=config.max_file_bytes)
@@ -541,7 +541,7 @@ def run_explain(
 def run_doctor(console: Console) -> int:
     """Report environment checks and actionable next steps. Installs nothing."""
     report = collect_environment()
-    table = Table(title="AI Alchemist doctor", header_style="phantom.accent")
+    table = Table(title="AI Alchemist doctor", header_style="alchemist.accent")
     table.add_column("Check")
     table.add_column("Result")
     table.add_column("Detail")
@@ -596,16 +596,16 @@ def run_doctor(console: Console) -> int:
     _doctor_advice(console, report)
     code = report.exit_code()
     if code == 0:
-        console.print(Text("Doctor: all checks passed.", style="phantom.ok"))
+        console.print(Text("Doctor: all checks passed.", style="alchemist.ok"))
     elif code == 2:
         console.print(
             Text(
                 "Doctor: core inspection can run, but Git or the local model is unavailable.",
-                style="phantom.warn",
+                style="alchemist.warn",
             )
         )
     else:
-        console.print(Text("Doctor: a required local check failed.", style="phantom.bad"))
+        console.print(Text("Doctor: a required local check failed.", style="alchemist.bad"))
     return code
 
 
@@ -623,7 +623,7 @@ def _doctor_advice(console: Console, report: EnvironmentReport) -> None:
             f"Fix the JSON configuration at {config_path()} or remove it to return to defaults."
         )
     if not report.data_dir_ok:
-        advice.append("Set PHANTOMOS_DATA_DIR to a writable directory, or fix the permissions.")
+        advice.append("Set AI_ALCHEMIST_DATA_DIR to a writable directory, or fix the permissions.")
     if report.ollama_reachable is not True:
         advice.append(
             "AI features need a local Ollama service. Install it from https://ollama.com/download "
@@ -659,7 +659,7 @@ def _doctor_advice(console: Console, report: EnvironmentReport) -> None:
         render_lines(console, "What you can do", advice)
 
 
-def run_model(console: Console, config: PhantomConfig | None = None) -> int:
+def run_model(console: Console, config: AlchemistConfig | None = None) -> int:
     """Show model status and the exact pull command. Never runs it."""
     if config is None:
         config = load_config()
@@ -716,8 +716,7 @@ def run_model(console: Console, config: PhantomConfig | None = None) -> int:
     console.print(Text("  ai-alchemist config set model NAME"))
     console.print(Text("  ai-alchemist config set fallback_model NAME"))
     console.print(Text("  ai-alchemist config set max_output_tokens 512"))
-    console.print(Text("or set PHANTOMOS_MODEL for one process."))
-    console.print(Text("The phantomos command runs this same program."))
+    console.print(Text("or set AI_ALCHEMIST_MODEL for one process."))
     console.print(Text("To download a model yourself, run one of:"))
     console.print(Text(f"  ollama pull {config.model}"))
     if config.fallback_model != config.model:
@@ -734,7 +733,7 @@ def answer_question(
     history: list,
     *,
     console: Console,
-    config: PhantomConfig,
+    config: AlchemistConfig,
 ) -> str | None:
     """Ask the local model about the current repository. Returns model text or None."""
     bundle = build_question_prompt(question, report, history, config)
@@ -747,7 +746,7 @@ def answer_question(
     return request_model(config, bundle.messages, console)
 
 
-def apply_personality(config: PhantomConfig, personality: str | None) -> PhantomConfig:
+def apply_personality(config: AlchemistConfig, personality: str | None) -> AlchemistConfig:
     """Return config with a validated session personality override."""
     if personality is None:
         return config

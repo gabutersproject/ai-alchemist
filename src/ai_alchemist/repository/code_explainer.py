@@ -4,7 +4,7 @@ import ast
 import re
 from dataclasses import dataclass, field
 
-from phantomos.repository.file_filters import FileRead
+from ai_alchemist.repository.file_filters import FileRead
 
 _GENERIC_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
     ("function", re.compile(r"^\s*(?:export\s+)?(?:async\s+)?function\s+([A-Za-z_$][\w$]*)", re.M)),
