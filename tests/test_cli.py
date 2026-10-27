@@ -38,6 +38,8 @@ def test_help_and_version():
     assert help_result.exit_code == 0
     for name in ("haunt", "inspect", "history", "explain", "doctor", "model"):
         assert name in help_result.output
+    assert "AI Alchemist" in help_result.output
+    assert "Transform Ideas Into Intelligence." in help_result.output
     version = runner.invoke(app, ["--version"])
     assert version.exit_code == 0
     assert "0.1.0" in version.output
@@ -132,7 +134,7 @@ def test_haunt_never_executes_natural_language(tmp_path: Path):
         input="status\nls -la\nscan\nexit\n",
     )
     assert result.exit_code == 0, result.output
-    assert "PHANTOMOS" in result.output
+    assert "AI ALCHEMIST" in result.output
     assert "Read-only" in result.output
     assert "was not executed" in result.output
     assert "Lamp Archive" in result.output
