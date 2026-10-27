@@ -11,7 +11,7 @@ from phantomos.ai.base import ChatMessage, Generation, ModelStatus
 from phantomos.config import PhantomConfig
 from phantomos.exceptions import AIResponseError, AIUnavailableError
 
-_NO_SUBSTITUTE = "PhantomOS did not invent a replacement answer."
+_NO_SUBSTITUTE = "AI Alchemist did not invent a replacement answer."
 _REQUEST_LOCK = threading.Lock()
 
 
@@ -21,7 +21,7 @@ class _RefuseRedirect(urllib.request.HTTPRedirectHandler):
     def redirect_request(self, req: Any, fp: Any, code: int, msg: str, headers: Any, newurl: str) -> None:
         raise AIUnavailableError(
             f"The Ollama endpoint returned HTTP {code} redirect to another URL. "
-            "PhantomOS does not follow redirects, so the prompt was not sent onward."
+            "AI Alchemist does not follow redirects, so the prompt was not sent onward."
         )
 
 
@@ -95,7 +95,7 @@ class OllamaProvider:
         if not _REQUEST_LOCK.acquire(blocking=False):
             raise AIUnavailableError(
                 "Another model request is already running in this process. "
-                "PhantomOS sends one request at a time. "
+                "AI Alchemist sends one request at a time. "
                 + _NO_SUBSTITUTE
             )
         chosen = model or self._model
@@ -175,7 +175,7 @@ class OllamaProvider:
         else:
             detail = (
                 f"Ollama is reachable at {self._endpoint}, but '{self._model}' is not installed. "
-                f"PhantomOS will not download it. To install it yourself, run: ollama pull {self._model}"
+                f"AI Alchemist will not download it. To install it yourself, run: ollama pull {self._model}"
             )
         return ModelStatus(
             reachable=True,
@@ -193,7 +193,7 @@ def _connection_detail(endpoint: str, exc: BaseException) -> str:
         f"Could not reach Ollama at {endpoint} ({reason}). "
         "AI features are unavailable until that local service is running. "
         "Repository inspection does not require a model. "
-        "PhantomOS did not contact an external model API. "
+        "AI Alchemist did not contact an external model API. "
         + _NO_SUBSTITUTE
     )
 
@@ -213,13 +213,13 @@ def _http_detail(exc: urllib.error.HTTPError, model: str) -> str:
     if exc.code in {401, 403}:
         return (
             f"The endpoint refused the request (HTTP {exc.code}). "
-            "PhantomOS does not send API keys. Point ollama_host at a local Ollama server. "
+            "AI Alchemist does not send API keys. Point ollama_host at a local Ollama server. "
             + _NO_SUBSTITUTE
         )
     if exc.code == 404:
         return (
             f"Ollama could not find model '{model}' (HTTP 404: {message}). "
-            f"PhantomOS will not download it. Run: ollama pull {model}. "
+            f"AI Alchemist will not download it. Run: ollama pull {model}. "
             + _NO_SUBSTITUTE
         )
     return (
@@ -236,7 +236,7 @@ def _content_from_message(payload: dict[str, Any]) -> str:
         raise AIResponseError(f"Ollama returned a malformed message object. {_NO_SUBSTITUTE}")
     if message.get("tool_calls"):
         raise AIResponseError(
-            "The model requested a tool call. PhantomOS has no tools and did not execute anything. "
+            "The model requested a tool call. AI Alchemist has no tools and did not execute anything. "
             + _NO_SUBSTITUTE
         )
     content = message.get("content") or ""

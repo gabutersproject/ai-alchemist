@@ -1,4 +1,4 @@
-"""Interactive PhantomOS session. It is not a system shell."""
+"""Interactive AI Alchemist session. It is not a system shell."""
 
 import sys
 from pathlib import Path
@@ -222,7 +222,7 @@ def _dispatch(session: Session, name: str, argument: str) -> bool:
         console.print(
             Text(
                 "Stored turns are separated by repository path. "
-                "Use `phantomos memory clear` to delete the database contents."
+                "Use `ai-alchemist memory clear` to delete the database contents."
             )
         )
         return True
@@ -237,7 +237,7 @@ def _dispatch(session: Session, name: str, argument: str) -> bool:
             render_error(console, str(exc))
             return True
         console.print(Text(f"Narration for this session: {session.config.personality}"))
-        console.print(Text("Persist it with: phantomos config set personality LEVEL"))
+        console.print(Text("Persist it with: ai-alchemist config set personality LEVEL"))
         return True
     if name == "repo":
         if not argument:
