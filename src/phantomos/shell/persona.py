@@ -6,29 +6,28 @@ files, or findings. Callers interpolate evidence themselves.
 
 _INTRO = {
     "off": (
-        "PhantomOS\n"
+        "AI Alchemist\n"
         "Read-only repository assistant. Inspection and Git history work without a model.\n"
         "Commands: help, status, scan, history, explain, model, personality, repo, memory, exit.\n"
         "Any other line is a question. It is not a shell command.\n"
-        "The past never leaves the repository."
+        "Transform Ideas Into Intelligence."
     ),
     "subtle": (
-        "PhantomOS is listening. The archive is read-only, and it can be read with no model.\n"
+        "AI Alchemist is reading the archive. The archive is read-only, and it can be read with no model.\n"
         "Commands: help, status, scan, history, explain, model, personality, repo, memory, exit.\n"
         "Any other line is a question. It is not a shell command.\n"
-        "The past never leaves the repository."
+        "Transform Ideas Into Intelligence."
     ),
     "normal": (
-        "Another explorer enters the archive.\n"
-        "Some code refuses to rest.\n"
+        "The workbench is open.\n"
+        "Where AI meets the art of transformation.\n"
         "I can read what was left behind without a model. I cannot change it.\n"
         "Commands: help, status, scan, history, explain, model, personality, repo, memory, exit.\n"
         "Any other line is a question for the local model, never a shell command."
     ),
     "cursed": (
-        "You opened the archive. The archive noticed.\n"
-        "Some code refuses to rest.\n"
-        "I will answer from the files, not from the dark, and I can do that with the model silent.\n"
+        "The crucible is hot. The repository is still only text.\n"
+        "I will answer from the files, and I can do that with the model silent.\n"
         "Commands: help, status, scan, history, explain, model, personality, repo, memory, exit.\n"
         "Any other line is a question. It is not a shell command."
     ),
@@ -53,9 +52,9 @@ _PREFIX = {
     },
     "normal": {
         "facts": "I only read what the repository left behind.",
-        "history": "These are the surviving traces. Even ghosts need evidence.",
-        "explain": "This file has been sleeping here. I read it. I did not wake it by running it.",
-        "oldest": "The oldest surviving trace in this repository is below. Even ghosts need evidence.",
+        "history": "These are the surviving traces. The reading still needs evidence.",
+        "explain": "This file is still on the page. I read it. I did not run it.",
+        "oldest": "The oldest surviving trace in this repository is below. The reading still needs evidence.",
         "newest": "The newest recorded trace is below.",
         "ai_missing": "The voice that interprets the archive is silent. The records are still here.",
     },
@@ -95,7 +94,7 @@ def discovery_line(personality: str, languages: dict[str, int]) -> str:
     if personality == "subtle":
         line = f"{count} {name} {noun} {verb} found by extension. The files were not executed."
     else:
-        line = f"The repository has awakened. {count} {name} {noun} {verb} discovered."
+        line = f"Counted from the walk. {count} {name} {noun} {verb} discovered."
         if personality == "cursed":
             line += " I will not invent the rest."
     if others:

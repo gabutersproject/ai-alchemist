@@ -11,16 +11,16 @@ from rich.table import Table
 from rich.text import Text
 from rich.theme import Theme
 
-from phantomos import TAGLINE
+from phantomos import APP_NAME, SECONDARY_TAGLINE, TAGLINE
 from phantomos.shell.persona import intro_text, narration
 
 THEME = Theme(
     {
-        "phantom.title": "bold green",
-        "phantom.accent": "green",
+        "phantom.title": "bold #D4AF37",
+        "phantom.accent": "#10B981",
         "phantom.warn": "red",
         "phantom.muted": "dim",
-        "phantom.ok": "green",
+        "phantom.ok": "#10B981",
         "phantom.bad": "red",
     }
 )
@@ -38,25 +38,31 @@ def make_console() -> Console:
 
 
 def logo_art() -> str:
-    """Box drawing for the PhantomOS banner."""
-    width = 52
+    """Box drawing for the AI Alchemist banner."""
+    width = 54
     rows = [
         "",
-        "   PHANTOMOS",
-        "   THE GHOST LIVING INSIDE YOUR CODE",
+        "        \u25cb",
+        "       \u2571\u25b3\u2572",
         "",
+        f"   {APP_NAME.upper()}",
+        "   TRANSFORM IDEAS INTO INTELLIGENCE.",
+        "",
+        f'   "{SECONDARY_TAGLINE}"',
         f'   "{TAGLINE}"',
         "",
     ]
-    top = "╔" + ("═" * width) + "╗"
-    bottom = "╚" + ("═" * width) + "╝"
-    body = ["║" + row.ljust(width) + "║" for row in rows]
+    top = "\u2554" + ("\u2550" * width) + "\u2557"
+    bottom = "\u255a" + ("\u2550" * width) + "\u255d"
+    body = ["\u2551" + row.ljust(width) + "\u2551" for row in rows]
     return "\n".join([top, *body, bottom])
 
 
 def render_logo(console: Console, personality: str) -> None:
-    """Print the banner and, unless narration is off, the ghost introduction."""
-    console.print(Text(logo_art(), style="phantom.accent"))
+    """Print the banner and the session introduction."""
+    banner = Text(logo_art(), style="phantom.accent")
+    banner.highlight_regex(r"AI ALCHEMIST", style="phantom.title")
+    console.print(banner)
     intro = intro_text(personality)
     if personality == "off":
         console.print(Text(intro))
@@ -130,7 +136,7 @@ def render_excerpt(console: Console, relative: str, text: str, *, max_lines: int
     shown = rows[:max_lines]
     body = "\n".join(shown)
     if len(rows) > max_lines:
-        body += f"\n… [{len(rows) - max_lines} more lines not shown in the terminal]"
+        body += f"\n\u2026 [{len(rows) - max_lines} more lines not shown in the terminal]"
     console.print(
         Panel(
             Text(body),
@@ -145,7 +151,7 @@ def render_ai_notice(console: Console, message: str) -> None:
     """An application message. It must not be styled as a successful model answer."""
     console.print(
         Panel(
-            Text(message + "\nPhantomOS did not generate a substitute model answer."),
+            Text(message + f"\n{APP_NAME} did not generate a substitute model answer."),
             title="AI unavailable",
             border_style="phantom.warn",
         )

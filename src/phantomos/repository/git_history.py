@@ -108,7 +108,7 @@ def open_repository(path: Path) -> Repo:
         repo = open_git_repository(selected, search_parent_directories=True)
     except (InvalidGitRepositoryError, NoSuchPathError) as exc:
         raise NotAGitRepositoryError(
-            f"Not a Git repository: {selected}. PhantomOS did not run git init."
+            f"Not a Git repository: {selected}. AI Alchemist did not run git init."
         ) from exc
     return repo
 
